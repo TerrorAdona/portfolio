@@ -18,7 +18,7 @@ import "./styles/globals.css";
 
 // Lazy load heavy sections
 const ProjectsSection = lazy(() => import("./pages/ProjectsSection").then((m) => ({ default: m.ProjectsSection })));
-const AboutSection = lazy(() => import("./pages/AboutSection").then((m) => ({ default: m.AboutSection })));
+const AboutSection = lazy(() => import("./pages/AboutSection"));
 const SkillsSection = lazy(() => import("./pages/SkillsSection").then((m) => ({ default: m.SkillsSection })));
 const ExperienceSection = lazy(() => import("./pages/ExperienceSection").then((m) => ({ default: m.ExperienceSection })));
 const ContactSection = lazy(() => import("./pages/ContactSection").then((m) => ({ default: m.ContactSection })));
