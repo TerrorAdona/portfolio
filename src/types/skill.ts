@@ -4,6 +4,8 @@
 
 import type { SkillCategory } from "./design-system";
 
+export type SkillStatus = "mastered" | "experienced" | "learning";
+
 export interface Skill {
   /** Unique identifier */
   id: string;
@@ -13,6 +15,8 @@ export interface Skill {
   category: SkillCategory;
   /** Proficiency level (1-5) */
   level: 1 | 2 | 3 | 4 | 5;
+  /** Status based on real project evidence */
+  status: SkillStatus;
   /** Years of experience */
   years?: number;
   /** Icon name (Lucide) */
@@ -69,4 +73,22 @@ export const PROFICIENCY_COLORS: Record<ProficiencyLevel, string> = {
   intermediate: "var(--color-info)",
   advanced: "var(--color-warning)",
   expert: "var(--color-accent-primary)",
+};
+
+export const STATUS_LABELS: Record<SkillStatus, { label: string; description: string; color: string }> = {
+  mastered: {
+    label: "Maîtrisé",
+    description: "Utilisé en production dans des projets réels",
+    color: "var(--color-success)",
+  },
+  experienced: {
+    label: "Expérimenté",
+    description: "Utilisé dans des configurations, POCs ou partiellement",
+    color: "var(--color-info)",
+  },
+  learning: {
+    label: "En apprentissage",
+    description: "En cours d'exploration, notions de base acquises",
+    color: "var(--color-warning)",
+  },
 };

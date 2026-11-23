@@ -1,17 +1,23 @@
 /**
  * Skills Data
  * Based on GitHub audit analysis - honest assessment of mastered vs experimented
+ * Status: mastered (proven in projects), experienced (config/partial), learning (exploring)
  */
 
 import type { Skill, SkillCategory } from "../types/skill";
 
+export type SkillStatus = "mastered" | "experienced" | "learning";
+
 export const skills: Skill[] = [
-  // Frontend - MAÎTRISÉS
+  // ============================================================
+  // FRONTEND DEVELOPMENT
+  // ============================================================
   {
     id: "typescript",
     name: "TypeScript",
     category: "frontend",
     level: 5,
+    status: "mastered",
     years: 2,
     icon: "🔷",
     description: "Typage avancé, generics, utility types, configuration stricte, migration JS→TS",
@@ -25,6 +31,7 @@ export const skills: Skill[] = [
     name: "React",
     category: "frontend",
     level: 5,
+    status: "mastered",
     years: 2,
     icon: "⚛️",
     description: "Hooks, Context, Suspense, Server Components, performance (memo, useMemo, useCallback), testing RTL",
@@ -38,6 +45,7 @@ export const skills: Skill[] = [
     name: "Next.js",
     category: "frontend",
     level: 4,
+    status: "mastered",
     years: 1,
     icon: "▲",
     description: "App Router, Server Components, Server Actions, Middleware, ISR/SSG/SSR, Image Optimization, API Routes",
@@ -51,6 +59,7 @@ export const skills: Skill[] = [
     name: "Tailwind CSS",
     category: "frontend",
     level: 5,
+    status: "mastered",
     years: 2,
     icon: "🎨",
     description: "Utility-first, design tokens, JIT, responsive, dark mode, plugins, configuration avancée, migration CSS",
@@ -64,6 +73,7 @@ export const skills: Skill[] = [
     name: "HTML5 / CSS3",
     category: "frontend",
     level: 5,
+    status: "mastered",
     years: 3,
     icon: "🌐",
     description: "Sémantique, accessibilité (ARIA), CSS Grid/Flexbox, Custom Properties, Animations, Container Queries",
@@ -73,38 +83,57 @@ export const skills: Skill[] = [
     order: 5,
   },
   {
-    id: "zustand",
-    name: "Zustand",
-    category: "frontend",
-    level: 4,
-    years: 1,
-    icon: "🐻",
-    description: "State management léger, middleware (persist, devtools), slices, selectors, TypeScript natif",
-    related: ["React", "Immer", "Context API"],
-    certified: false,
-    featured: false,
-    order: 6,
-  },
-  {
     id: "framer-motion",
     name: "Framer Motion",
     category: "frontend",
     level: 4,
+    status: "experienced",
     years: 1,
     icon: "✨",
     description: "Animations déclaratives, layout animations, gestures, scroll animations, reduced-motion support",
     related: ["React", "CSS Animations", "GSAP"],
     certified: false,
     featured: false,
+    order: 6,
+  },
+  {
+    id: "zustand",
+    name: "Zustand",
+    category: "frontend",
+    level: 4,
+    status: "experienced",
+    years: 1,
+    icon: "🐻",
+    description: "State management léger, middleware (persist, devtools), slices, selectors, TypeScript natif",
+    related: ["React", "Immer", "Context API"],
+    certified: false,
+    featured: false,
     order: 7,
   },
+  {
+    id: "tRPC",
+    name: "tRPC",
+    category: "frontend",
+    level: 4,
+    status: "experienced",
+    years: 1,
+    icon: "🔷",
+    description: "End-to-end type safety, Procedures, Routers, Middlewares, Subscriptions, React Query integration",
+    related: ["TypeScript", "Next.js", "Prisma", "Zod", "React Query"],
+    certified: false,
+    featured: false,
+    order: 8,
+  },
 
-  // Backend - MAÎTRISÉS
+  // ============================================================
+  // BACKEND DEVELOPMENT
+  // ============================================================
   {
     id: "spring-boot",
     name: "Spring Boot",
     category: "backend",
     level: 5,
+    status: "mastered",
     years: 2,
     icon: "☕",
     description: "Spring Boot 3, Spring Security 6, Spring Data JPA, Spring Validation, Actuator, Configuration profiles",
@@ -118,6 +147,7 @@ export const skills: Skill[] = [
     name: "Java 17/21",
     category: "backend",
     level: 5,
+    status: "mastered",
     years: 3,
     icon: "☕",
     description: "Records, Pattern Matching, Sealed Classes, Virtual Threads, Streams, CompletableFuture, Modules",
@@ -131,12 +161,13 @@ export const skills: Skill[] = [
     name: "Node.js",
     category: "backend",
     level: 4,
+    status: "mastered",
     years: 2,
     icon: "🟢",
     description: "Express, Fastify, tRPC, Prisma, TypeScript natif, Workers, Streams, Event Loop, Performance tuning",
     related: ["TypeScript", "PostgreSQL", "Redis", "Docker"],
     certified: false,
-    featured: false,
+    featured: true,
     order: 3,
   },
   {
@@ -144,34 +175,25 @@ export const skills: Skill[] = [
     name: "REST API Design",
     category: "backend",
     level: 5,
+    status: "mastered",
     years: 2,
     icon: "🔗",
     description: "OpenAPI/Swagger, Versioning, Pagination, Filtering, Error handling, Rate limiting, CORS, Security headers",
     related: ["Spring Boot", "Node.js", "tRPC", "GraphQL"],
     certified: false,
-    featured: false,
+    featured: true,
     order: 4,
   },
-  {
-    id: "trpc",
-    name: "tRPC",
-    category: "backend",
-    level: 4,
-    years: 1,
-    icon: "🔷",
-    description: "End-to-end type safety, Procedures, Routers, Middlewares, Subscriptions, React Query integration",
-    related: ["TypeScript", "Next.js", "Prisma", "Zod", "React Query"],
-    certified: false,
-    featured: false,
-    order: 5,
-  },
 
-  // Database - MAÎTRISÉS
+  // ============================================================
+  // DATABASE MANAGEMENT
+  // ============================================================
   {
     id: "postgresql",
     name: "PostgreSQL",
     category: "database",
     level: 5,
+    status: "mastered",
     years: 2,
     icon: "🐘",
     description: "Schema design, Indexes, JSONB, Full-text search, CTEs, Window functions, Partitioning, Replication",
@@ -185,6 +207,7 @@ export const skills: Skill[] = [
     name: "MySQL",
     category: "database",
     level: 4,
+    status: "mastered",
     years: 2,
     icon: "🐬",
     description: "InnoDB, Indexes, Transactions, Replication, Performance tuning, JSON support, CTEs",
@@ -198,6 +221,7 @@ export const skills: Skill[] = [
     name: "Prisma ORM",
     category: "database",
     level: 4,
+    status: "mastered",
     years: 1,
     icon: "🔷",
     description: "Schema modeling, Migrations, Client generation, Middleware, Transactions, Raw queries, Performance",
@@ -211,6 +235,7 @@ export const skills: Skill[] = [
     name: "Flyway / Liquibase",
     category: "database",
     level: 4,
+    status: "experienced",
     years: 1,
     icon: "📦",
     description: "Migrations versionnées, Repeatable migrations, Callbacks, Baseline, Repair, CI/CD integration",
@@ -224,6 +249,7 @@ export const skills: Skill[] = [
     name: "Redis",
     category: "database",
     level: 3,
+    status: "experienced",
     years: 1,
     icon: "🔴",
     description: "Caching, Sessions, Pub/Sub, Rate limiting, Lua scripting, Cluster, Persistence (RDB/AOF)",
@@ -233,12 +259,15 @@ export const skills: Skill[] = [
     order: 5,
   },
 
-  // DevOps - EXPÉRIMENTÉS
+  // ============================================================
+  // DEVOPS & TOOLS
+  // ============================================================
   {
     id: "docker",
     name: "Docker",
     category: "devops",
     level: 4,
+    status: "mastered",
     years: 2,
     icon: "🐳",
     description: "Multi-stage builds, Docker Compose, BuildKit, Multi-arch, Security scanning, Registry, Volumes",
@@ -252,6 +281,7 @@ export const skills: Skill[] = [
     name: "GitHub Actions",
     category: "devops",
     level: 4,
+    status: "mastered",
     years: 2,
     icon: "⚙️",
     description: "Workflows, Matrix builds, Caching, Artifacts, Environments, Secrets, Reusable workflows, Self-hosted runners",
@@ -265,6 +295,7 @@ export const skills: Skill[] = [
     name: "Vercel / Netlify",
     category: "devops",
     level: 4,
+    status: "experienced",
     years: 1,
     icon: "▲",
     description: "Preview deployments, Edge functions, Analytics, Cron jobs, Domain management, Environment variables",
@@ -278,6 +309,7 @@ export const skills: Skill[] = [
     name: "Nginx",
     category: "devops",
     level: 3,
+    status: "experienced",
     years: 1,
     icon: "🌐",
     description: "Reverse proxy, Load balancing, SSL/TLS, Rate limiting, Caching, Compression, Security headers",
@@ -288,9 +320,10 @@ export const skills: Skill[] = [
   },
   {
     id: "kubernetes",
-    name: "Kubernetes (notions)",
+    name: "Kubernetes",
     category: "devops",
     level: 2,
+    status: "learning",
     years: 0.5,
     icon: "☸️",
     description: "Pods, Services, Deployments, ConfigMaps, Secrets, Ingress, Helm charts (basics)",
@@ -299,93 +332,118 @@ export const skills: Skill[] = [
     featured: false,
     order: 5,
   },
-
-  // Tools - MAÎTRISÉS
   {
     id: "git",
     name: "Git / GitHub",
-    category: "tools",
+    category: "devops",
     level: 5,
+    status: "mastered",
     years: 3,
     icon: "📝",
     description: "Branching strategies (GitFlow, Trunk-based), Rebasing, Cherry-pick, Bisect, Hooks, GitHub CLI, PR reviews",
     related: ["GitHub Actions", "Conventional Commits", "Semantic Release"],
     certified: false,
     featured: true,
-    order: 1,
+    order: 6,
   },
-  {
-    id: "vscode",
-    name: "VS Code",
-    category: "tools",
-    level: 5,
-    years: 3,
-    icon: "💻",
-    description: "Extensions, Debugging, Tasks, Snippets, Settings sync, Remote SSH, Dev Containers, Copilot",
-    related: ["TypeScript", "ESLint", "Prettier", "Tailwind CSS IntelliSense"],
-    certified: false,
-    featured: false,
-    order: 2,
-  },
+
+  // ============================================================
+  // SOFTWARE ENGINEERING
+  // ============================================================
   {
     id: "eslint-prettier",
     name: "ESLint / Prettier",
     category: "tools",
     level: 5,
+    status: "mastered",
     years: 2,
     icon: "✨",
     description: "Flat config, Rules customization, TypeScript ESLint, Import sorting, Unused detection, Auto-fix on save",
     related: ["TypeScript", "React", "Tailwind", "Husky"],
     certified: false,
     featured: true,
-    order: 3,
+    order: 1,
   },
   {
     id: "vitest",
     name: "Vitest",
     category: "tools",
     level: 4,
+    status: "experienced",
     years: 1,
     icon: "🧪",
     description: "Unit/Integration tests, Coverage (v8), Mocking, Snapshots, Watch mode, UI, TypeScript natif",
     related: ["React Testing Library", "MSW", "Playwright", "Jest migration"],
     certified: false,
     featured: false,
-    order: 4,
+    order: 2,
   },
   {
     id: "playwright",
     name: "Playwright",
     category: "tools",
     level: 4,
+    status: "experienced",
     years: 1,
     icon: "🎭",
     description: "E2E testing, Multi-browser, Auto-waiting, Trace viewer, Visual regression, CI/CD integration",
     related: ["Vitest", "React Testing Library", "GitHub Actions", "Docker"],
     certified: false,
     featured: false,
-    order: 5,
+    order: 3,
   },
   {
     id: "storybook",
     name: "Storybook",
     category: "tools",
     level: 3,
+    status: "learning",
     years: 1,
     icon: "📚",
     description: "Component documentation, Controls, Actions, Viewport, Accessibility addon, Chromatic, CI publishing",
     related: ["React", "TypeScript", "Tailwind", "Vite"],
     certified: false,
     featured: false,
+    order: 4,
+  },
+  {
+    id: "clean-architecture",
+    name: "Clean Architecture / DDD",
+    category: "tools",
+    level: 4,
+    status: "experienced",
+    years: 2,
+    icon: "🏗️",
+    description: "Domain-driven design, Clean Architecture, SOLID, CQRS, Event sourcing, Hexagonal architecture",
+    related: ["Spring Boot", "TypeScript", "Testing", "Domain modeling"],
+    certified: false,
+    featured: true,
+    order: 5,
+  },
+  {
+    id: "testing",
+    name: "Testing Strategies",
+    category: "tools",
+    level: 4,
+    status: "experienced",
+    years: 2,
+    icon: "🧪",
+    description: "Unit, Integration, E2E, Contract testing, TDD, BDD, Testcontainers, Mocking strategies",
+    related: ["JUnit", "Vitest", "Playwright", "Testcontainers", "MSW"],
+    certified: false,
+    featured: false,
     order: 6,
   },
 
-  // Soft Skills
+  // ============================================================
+  // SOFT SKILLS
+  // ============================================================
   {
     id: "problem-solving",
     name: "Résolution de problèmes",
     category: "soft",
     level: 5,
+    status: "mastered",
     years: 3,
     icon: "🧩",
     description: "Debugging systématique, Root cause analysis, Algorithmic thinking, Performance profiling",
@@ -397,6 +455,7 @@ export const skills: Skill[] = [
     name: "Communication technique",
     category: "soft",
     level: 4,
+    status: "mastered",
     years: 2,
     icon: "💬",
     description: "Documentation, Code reviews, Pair programming, Mentoring, Technical writing, Presentations",
@@ -408,6 +467,7 @@ export const skills: Skill[] = [
     name: "Apprentissage continu",
     category: "soft",
     level: 5,
+    status: "mastered",
     years: 3,
     icon: "📚",
     description: "Veille technologique, Expérimentation, Open source contribution, Blog writing, Conference talks",
@@ -419,6 +479,7 @@ export const skills: Skill[] = [
     name: "Travail d'équipe",
     category: "soft",
     level: 4,
+    status: "mastered",
     years: 2,
     icon: "🤝",
     description: "Agile/Scrum, Sprint planning, Retrospectives, Code ownership partagé, Knowledge sharing",
@@ -430,6 +491,7 @@ export const skills: Skill[] = [
     name: "Anglais technique",
     category: "soft",
     level: 4,
+    status: "mastered",
     years: 3,
     icon: "🇬🇧",
     description: "Documentation lecture/écriture, Code comments, Issues/PRs, Technical discussions, Conferences",
@@ -445,27 +507,53 @@ export function getSkillsByCategory(category: SkillCategory): Skill[] {
   return skills.filter((s) => s.category === category).sort((a, b) => (a.order || 99) - (b.order || 99));
 }
 
+export function getSkillsByCategoryAndStatus(category: SkillCategory, status: SkillStatus): Skill[] {
+  return skills.filter((s) => s.category === category && s.status === status).sort((a, b) => (a.order || 99) - (b.order || 99));
+}
+
 export function getFeaturedSkills(): Skill[] {
   return skills.filter((s) => s.featured).sort((a, b) => (a.order || 99) - (b.order || 99));
 }
 
 export function getMasteredSkills(): Skill[] {
-  return skills.filter((s) => s.level >= 4);
+  return skills.filter((s) => s.status === "mastered");
 }
 
-export function getExperimentedSkills(): Skill[] {
-  return skills.filter((s) => s.level <= 3);
+export function getExperiencedSkills(): Skill[] {
+  return skills.filter((s) => s.status === "experienced");
 }
 
-export function getSkillsByLevel(level: number): Skill[] {
-  return skills.filter((s) => s.level === level);
+export function getLearningSkills(): Skill[] {
+  return skills.filter((s) => s.status === "learning");
+}
+
+export function getSkillsByStatus(status: SkillStatus): Skill[] {
+  return skills.filter((s) => s.status === status);
 }
 
 export const skillCategories = [
-  { key: "frontend", label: "Frontend", icon: "🎨", color: "var(--color-accent-primary)" },
-  { key: "backend", label: "Backend", icon: "⚙️", color: "var(--color-info)" },
-  { key: "database", label: "Base de données", icon: "🗄️", color: "var(--color-success)" },
-  { key: "devops", label: "DevOps / Cloud", icon: "☁️", color: "var(--color-warning)" },
-  { key: "tools", label: "Outils & Qualité", icon: "🔧", color: "var(--color-accent-tertiary)" },
-  { key: "soft", label: "Soft Skills", icon: "💡", color: "var(--color-accent-secondary)" },
+  { key: "frontend", label: "Frontend Development", icon: "🎨", color: "var(--color-accent-primary)", description: "Interfaces utilisateur modernes et performantes" },
+  { key: "backend", label: "Backend Development", icon: "⚙️", color: "var(--color-info)", description: "APIs robustes et architectures serveur" },
+  { key: "database", label: "Database Management", icon: "🗄️", color: "var(--color-success)", description: "Modélisation et optimisation des données" },
+  { key: "devops", label: "DevOps & Tools", icon: "☁️", color: "var(--color-warning)", description: "Déploiement, CI/CD et infrastructure" },
+  { key: "tools", label: "Software Engineering", icon: "🔧", color: "var(--color-accent-tertiary)", description: "Qualité, tests et architecture logicielle" },
+  { key: "soft", label: "Soft Skills", icon: "💡", color: "var(--color-accent-secondary)", description: "Compétences transverses et humaines" },
 ] as const;
+
+export const statusLabels: Record<SkillStatus, { label: string; description: string; color: string }> = {
+  mastered: {
+    label: "Maîtrisé",
+    description: "Utilisé en production dans des projets réels",
+    color: "var(--color-success)",
+  },
+  experienced: {
+    label: "Expérimenté",
+    description: "Utilisé dans des configurations, POCs ou partiellement",
+    color: "var(--color-info)",
+  },
+  learning: {
+    label: "En apprentissage",
+    description: "En cours d'exploration, notions de base acquises",
+    color: "var(--color-warning)",
+  },
+};
