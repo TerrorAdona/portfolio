@@ -1,0 +1,178 @@
+@theme {
+  /* ============================================================
+     COLORS — Dark Premium Palette
+     ============================================================ */
+
+  /* Backgrounds */
+  --color-bg-primary: #09090B;        /* zinc-950 */
+  --color-bg-secondary: #111114;      /* zinc-900/950 mix */
+  --color-bg-tertiary: #18181B;       /* zinc-900 */
+  --color-bg-hover: #1F1F23;          /* zinc-800 */
+  --color-bg-active: #27272A;         /* zinc-800/700 */
+
+  /* Borders */
+  --color-border-primary: #27272A;    /* zinc-800 */
+  --color-border-secondary: #3F3F46;  /* zinc-700 */
+  --color-border-focus: #8B5CF6;      /* violet-500 */
+
+  /* Text */
+  --color-text-primary: #FAFAFA;      /* zinc-50 */
+  --color-text-secondary: #A1A1AA;    /* zinc-400 */
+  --color-text-muted: #71717A;        /* zinc-500 */
+  --color-text-inverse: #09090B;      /* zinc-950 */
+
+  /* Accent — Violet/Bleu électrique */
+  --color-accent-primary: #8B5CF6;    /* violet-500 */
+  --color-accent-secondary: #6366F1;  /* indigo-500 */
+  --color-accent-tertiary: #22D3EE;   /* cyan-400 */
+  --color-accent-glow: rgba(139, 92, 246, 0.15);
+  --color-accent-glow-strong: rgba(139, 92, 246, 0.3);
+
+  /* Semantic */
+  --color-success: #22C55E;           /* green-500 */
+  --color-warning: #F59E0B;           /* amber-500 */
+  --color-error: #EF4444;             /* red-500 */
+  --color-info: #3B82F6;              /* blue-500 */
+
+  /* ============================================================
+     TYPOGRAPHY
+     ============================================================ */
+
+  /* Font Families */
+  --font-display: "Geist Variable", "Geist", "Inter", system-ui, sans-serif;
+  --font-ui: "Geist Variable", "Geist", "Inter", system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", "Geist Mono", "JetBrains Mono", monospace;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Tracking */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.04em;
+
+  /* Fluid Type Scale (clamp) */
+  --text-display-xl: clamp(3.5rem, 8vw, 6rem);     /* 56px - 96px */
+  --text-display-lg: clamp(2.5rem, 5vw, 4rem);     /* 40px - 64px */
+  --text-display-md: clamp(2rem, 4vw, 3rem);       /* 32px - 48px */
+  --text-display-sm: clamp(1.5rem, 3vw, 2.25rem);  /* 24px - 36px */
+
+  --text-h1: clamp(1.875rem, 3vw, 2.5rem);         /* 30px - 40px */
+  --text-h2: clamp(1.5rem, 2.5vw, 2rem);           /* 24px - 32px */
+  --text-h3: clamp(1.25rem, 2vw, 1.5rem);          /* 20px - 24px */
+  --text-h4: clamp(1.125rem, 1.5vw, 1.25rem);      /* 18px - 20px */
+
+  --text-lg: 1.125rem;     /* 18px — Lead paragraph */
+  --text-base: 1rem;       /* 16px — Body */
+  --text-sm: 0.875rem;     /* 14px — Meta, labels */
+  --text-xs: 0.75rem;      /* 12px — Captions, badges */
+
+  --text-code-sm: 0.8125rem;   /* 13px */
+  --text-code-base: 0.875rem;  /* 14px */
+
+  /* ============================================================
+     SPACING
+     ============================================================ */
+
+  --space-0: 0;
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px — Base unit */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  --space-32: 8rem;     /* 128px */
+
+  /* Semantic spacing */
+  --space-section-x: clamp(1.5rem, 5vw, 4rem);
+  --space-section-y: clamp(4rem, 10vw, 8rem);
+  --space-card: 1.5rem;        /* 24px */
+  --space-card-sm: 1rem;       /* 16px */
+
+  /* ============================================================
+     BORDER RADIUS
+     ============================================================ */
+
+  --radius-none: 0;
+  --radius-xs: 0.125rem;   /* 2px */
+  --radius-sm: 0.25rem;    /* 4px */
+  --radius-md: 0.375rem;   /* 6px */
+  --radius-lg: 0.5rem;     /* 8px */
+  --radius-xl: 0.75rem;    /* 12px */
+  --radius-2xl: 1rem;      /* 16px */
+  --radius-full: 9999px;
+
+  /* ============================================================
+     SHADOWS & GLOW
+     ============================================================ */
+
+  /* Elevation shadows */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  /* Accent glow shadows */
+  --shadow-glow-sm: 0 0 0 1px var(--color-border-primary), 0 0 20px -5px var(--color-accent-glow);
+  --shadow-glow-md: 0 0 0 1px var(--color-border-primary), 0 0 30px -5px var(--color-accent-glow);
+  --shadow-glow-lg: 0 0 0 1px var(--color-border-primary), 0 0 40px -5px var(--color-accent-glow-strong);
+
+  /* Focus ring */
+  --shadow-focus: 0 0 0 2px var(--color-bg-primary), 0 0 0 4px var(--color-border-focus);
+
+  /* Glassmorphism */
+  --glass-bg: rgba(24, 24, 27, 0.7);
+  --glass-border: rgba(39, 39, 42, 0.5);
+  --glass-blur: blur(20px);
+
+  /* ============================================================
+     TRANSITIONS
+     ============================================================ */
+
+  --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ============================================================
+     CONTAINERS
+     ============================================================ */
+
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1440px;
+
+  /* ============================================================
+     Z-INDEX SCALE
+     ============================================================ */
+
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-toast: 800;
+  --z-skip-link: 9999;
+
+  /* ============================================================
+     BREAKPOINTS (Tailwind defaults, documented here)
+     ============================================================ */
+  /* sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px */
+}

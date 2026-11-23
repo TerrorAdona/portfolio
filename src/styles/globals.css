@@ -1,0 +1,73 @@
+/**
+ * Global styles entry point
+ * This file is imported by index.css and re-exports all design system styles
+ */
+
+@import "./theme.css";
+@import "./animations.css";
+@import "./utilities.css";
+
+/* Additional global utilities */
+@layer base {
+  /* Ensure consistent box-sizing */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #09090B, 0 0 0 4px #8B5CF6;
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: #8B5CF6;
+    color: #09090B;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #09090B;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3F3F46;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #71717A;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
