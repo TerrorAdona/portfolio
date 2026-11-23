@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
 import { Section } from "./components/layout/Section";
@@ -13,7 +13,9 @@ import { profile } from "./data/profile";
 import { projects } from "./data/projects";
 import { skills } from "./data/skills";
 import { ExternalLink, ArrowRight, Send, Mail } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useScrollProgress, useReducedMotion } from "./hooks";
+import { pageVariants, backToTopVariants, cursorVariants, cursorFollowerVariants } from "./lib/animations";
 import "./styles/globals.css";
 
 // Lazy load heavy sections
@@ -88,6 +90,40 @@ const iconVariants = {
 };
 
 function App() {
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const scrollProgress = useScrollProgress();
+  const reducedMotion = useReducedMotion();
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [cursorVisible, setCursorVisible] = useState(false);
+
+  // Track cursor position for custom cursor
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursorPos({ x: e.clientX, y: e.clientY });
+      setCursorVisible(true);
+    };
+    const handleMouseLeave = () => setCursorVisible(false);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseleave", handleMouseLeave);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+
+  // Show back to top button after scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+  };
+
   const navItems = [
     { label: "Accueil", href: "#hero" },
     { label: "À propos", href: "#about" },
@@ -105,6 +141,48 @@ function App() {
       <a href="#main-content" className="skip-link">
         Aller au contenu principal
       </a>
+
+      {/* Scroll Progress Indicator */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 z-[9999] pointer-events-none"
+        style={{ background: "linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-tertiary))" }}
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: scrollProgress }}
+        transition={{ duration: 0.1, ease: "linear" }}
+        aria-hidden="true"
+      />
+
+      {/* Custom Cursor (Desktop only, respects reduced motion) */}
+      {!reducedMotion && cursorVisible && (
+        <div>
+          <motion.div
+            variants={cursorVariants}
+            className="fixed w-8 h-8 rounded-full border-2 pointer-events-none z-[9999] mix-blend-difference"
+            style={{
+              left: cursorPos.x - 16,
+              top: cursorPos.y - 16,
+              borderColor: "var(--color-text-primary)",
+              backgroundColor: "transparent",
+            }}
+            animate={{ x: 0, y: 0 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            aria-hidden="true"
+          />
+          <motion.div
+            variants={cursorFollowerVariants}
+            className="fixed w-24 h-24 rounded-full pointer-events-none z-[9998]"
+            style={{
+              left: cursorPos.x - 48,
+              top: cursorPos.y - 48,
+              backgroundColor: "var(--color-accent-primary)",
+              opacity: 0.15,
+            }}
+            animate={{ x: 0, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            aria-hidden="true"
+          />
+        </div>
+      )}
 
       {/* Header / Navbar */}
       <Header
@@ -128,7 +206,15 @@ function App() {
       />
 
       {/* Main Content */}
-      <main id="main-content" className="min-h-screen">
+      <AnimatePresence mode="wait">
+        <motion.main
+          id="main-content"
+          className="min-h-screen"
+          variants={pageVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
         {/* Hero Section */}
         <Section id="hero" size="lg" background="gradient" className="relative overflow-hidden min-h-screen flex items-center">
           {/* Background decorative elements */}
@@ -492,7 +578,25 @@ function App() {
         <Suspense fallback={<SectionSkeleton />}>
           <ContactSection />
         </Suspense>
-      </main>
+      </motion.main>
+      </AnimatePresence>
+
+      {/* Back to Top Button */}
+      <AnimatePresence>
+        {showBackToTop && (
+          <motion.button
+            variants={backToTopVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="fixed bottom-8 right-8 z-[999] p-4 rounded-full bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)] text-[var(--color-text-primary)] shadow-[var(--shadow-lg)] hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-accent-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+            aria-label="Retour en haut"
+            onClick={scrollToTop}
+          >
+            <ArrowRight className="w-5 h-5" aria-hidden="true" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Footer */}
       <Footer

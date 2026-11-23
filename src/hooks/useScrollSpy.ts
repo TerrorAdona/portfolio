@@ -102,3 +102,114 @@ export function useScrollDirection(): "up" | "down" | null {
 
   return direction;
 }
+
+/**
+ * Hook for scroll progress (0 to 1)
+ */
+export function useScrollProgress(): number {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollProgress = docHeight > 0 ? scrollTop / docHeight : 0;
+      setProgress(Math.min(Math.max(scrollProgress, 0), 1));
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return progress;
+}
+
+/**
+ * Hook for scroll reveal animation
+ * Returns true when element is in viewport
+ */
+export function useScrollReveal(
+  elementRef: React.RefObject<Element>,
+  options?: IntersectionObserverInit
+): boolean {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // Optionally unobserve after first reveal
+          // observer.unobserve(element);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px -10% 0px", // Trigger slightly before element enters viewport
+        threshold: 0.1,
+        ...options,
+      }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [elementRef.current, options?.rootMargin, options?.threshold]);
+
+  return isVisible;
+}
+
+/**
+ * Hook for parallax effect
+ * Returns transform value based on scroll position
+ */
+export function useParallax(speed: number = 0.5): number {
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setOffset(scrollY * speed);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [speed]);
+
+  return offset;
+}
+
+/**
+ * Hook for element parallax based on viewport position
+ */
+export function useElementParallax(
+  elementRef: React.RefObject<Element>,
+  speed: number = 0.5
+): number {
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const element = elementRef.current;
+    if (!element) return;
+
+    const handleScroll = () => {
+      const rect = element.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const elementCenter = rect.top + rect.height / 2;
+      const viewportCenter = viewportHeight / 2;
+      const distance = (viewportCenter - elementCenter) / viewportCenter;
+      setOffset(distance * speed * 100);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [elementRef.current, speed]);
+
+  return offset;
+}
