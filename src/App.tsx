@@ -7,12 +7,13 @@ import { Button } from "./components/ui/Button";
 import { Card } from "./components/ui/Card";
 import { Badge } from "./components/ui/Badge";
 import { TechBadgeCloud } from "./components/projects/TechBadge";
+import { HeroIllustration } from "./components/ui/HeroIllustration";
+import { GitHubIcon, LinkedInIcon, TwitterIcon, SparklesIcon } from "./components/ui/BrandIcons";
 import { profile } from "./data/profile";
 import { projects } from "./data/projects";
 import { skills } from "./data/skills";
-import { experiences } from "./data/experience";
-import { education, certifications } from "./data/education";
-import { GitBranch, Users, MessageSquare, Mail, ExternalLink, ArrowRight } from "lucide-react";
+import { ExternalLink, ArrowRight, Send, Mail } from "lucide-react";
+import { motion } from "framer-motion";
 import "./styles/globals.css";
 
 // Lazy load heavy sections
@@ -38,12 +39,61 @@ function SectionSkeleton() {
   );
 }
 
+// Framer Motion variants for Hero animations - using proper easing
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.4, 0, 0.2, 1] as const,
+    },
+  },
+};
+
+const badgeVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.6,
+      ease: [0.34, 1.56, 0.64, 1] as const,
+    },
+  },
+};
+
+const iconVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.5,
+      ease: [0.34, 1.56, 0.64, 1] as const,
+    },
+  },
+};
+
 function App() {
   const navItems = [
-    { label: "Projets", href: "#projects" },
-    { label: "Compétences", href: "#skills" },
-    { label: "Expérience", href: "#experience" },
+    { label: "Accueil", href: "#hero" },
     { label: "À propos", href: "#about" },
+    { label: "Compétences", href: "#skills" },
+    { label: "Projets", href: "#projects" },
+    { label: "Parcours", href: "#experience" },
     { label: "Contact", href: "#contact" },
   ];
 
@@ -56,141 +106,252 @@ function App() {
         Aller au contenu principal
       </a>
 
-      {/* Header */}
+      {/* Header / Navbar */}
       <Header
         logo={
-          <a href="/" className="font-display font-bold text-xl text-[var(--color-text-primary)] hover:opacity-80 transition-opacity" aria-label="Accueil">
+          <a
+            href="#hero"
+            className="font-display font-bold text-xl text-[var(--color-text-primary)] hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] rounded-sm"
+            aria-label="Rakotoarinivo Herilala - Accueil"
+          >
             RH
           </a>
         }
         navItems={navItems}
-        cta={{
-          label: "Voir mes projets",
-          href: "#projects",
-          variant: "primary",
+        cvDownload={{
+          href: "/cv.pdf",
+          label: "CV",
         }}
         showThemeToggle={true}
         fixed={true}
+        transparent={true}
       />
 
       {/* Main Content */}
-      <main id="main-content" className="pt-16 lg:pt-20 min-h-screen">
+      <main id="main-content" className="min-h-screen">
         {/* Hero Section */}
-        <Section id="hero" size="lg" background="gradient" className="relative overflow-hidden">
-          <Container size="xl" padding="lg" center={true}>
-            <div className="max-w-4xl text-center">
-              {/* Badge */}
-              <Badge variant="accent" size="md" className="mb-6 inline-flex items-center gap-2">
-                <span className="w-4 h-4" aria-hidden="true">✨</span>
-                <span>Disponible pour nouvelles opportunités</span>
-              </Badge>
+        <Section id="hero" size="lg" background="gradient" className="relative overflow-hidden min-h-screen flex items-center">
+          {/* Background decorative elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[var(--color-accent-primary)]/5 blur-3xl animate-float" />
+            <div className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-[var(--color-accent-tertiary)]/5 blur-3xl animate-float" style={{ animationDelay: "1s" }} />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-[var(--color-accent-primary)]/10" />
+          </div>
 
-              {/* Name & Title */}
-              <h1 className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-6">
-                {profile.name}
-              </h1>
-              <p className="text-[var(--color-text-secondary)] text-xl lg:text-2xl mb-8 max-w-2xl mx-auto leading-relaxed">
-                {profile.tagline}
-              </p>
+          <Container size="xl" padding="lg" center={false}>
+            <div className="flex lg:flex-row-reverse items-center justify-between gap-12 lg:gap-20 min-h-[calc(100vh-4rem)]">
+              {/* Hero Content - Left Side */}
+              <motion.div
+                className="flex-1 max-w-2xl text-left lg:text-left"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                {/* Badge - Available for opportunities */}
+                <motion.div
+                  variants={badgeVariants}
+                  className="mb-8"
+                >
+                  <Badge variant="accent" size="md" className="inline-flex items-center gap-2 px-4 py-2">
+                    <motion.span
+                      initial={{ scale: 0, rotate: -90 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ delay: 0.3, duration: 0.5, ease: [0.34, 1.56, 0.64, 1] as const }}
+                      className="w-4 h-4 flex-shrink-0"
+                      aria-hidden="true"
+                    >
+                      <SparklesIcon className="w-4 h-4" />
+                    </motion.span>
+                    <span className="font-medium">Disponible pour opportunités professionnelles</span>
+                  </Badge>
+                </motion.div>
 
-              {/* Short Bio */}
-              <p className="text-[var(--color-text-muted)] text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-                {profile.shortBio}
-              </p>
+                {/* Name */}
+                <motion.h1
+                  variants={itemVariants}
+                  className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-6 leading-[1.1]"
+                  style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
+                >
+                  Rakotoarinivo Herilala
+                </motion.h1>
 
-              {/* CTAs */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-                <Button
-                  asAnchor
-                  href="#projects"
-                  variant="primary"
-                  size="lg"
-                  rightIcon={<span className="w-5 h-5" aria-hidden="true">→</span>}
+                {/* Title */}
+                <motion.p
+                  variants={itemVariants}
+                  className="text-[var(--color-accent-primary)] font-semibold text-lg mb-4 tracking-wide uppercase"
                 >
-                  Voir mes projets
-                </Button>
-                <Button
-                  asAnchor
-                  href="#contact"
-                  variant="outline"
-                  size="lg"
-                >
-                  Me contacter
-                </Button>
-              </div>
+                  Full Stack Developer
+                </motion.p>
 
-              {/* Social Links */}
-              <div className="flex items-center justify-center gap-6" role="list" aria-label="Réseaux sociaux">
-                <a
-                  href={profile.social.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-                  aria-label="GitHub"
+                {/* Tagline / Accroche */}
+                <motion.p
+                  variants={itemVariants}
+                  className="text-[var(--color-text-secondary)] text-xl lg:text-2xl mb-10 max-w-xl leading-relaxed"
                 >
-                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823.92.823 1.855v2.792c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-                  </svg>
-                </a>
-                <a
-                  href={profile.social.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-                  aria-label="LinkedIn"
-                >
-                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.36-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.141-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                  </svg>
-                </a>
-                <a
-                  href={profile.social.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-                  aria-label="Twitter"
-                >
-                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M23.953 4.57a10.005 10.005 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.055-1.896.16-2.825.195a4.9 4.9 0 00-8.379 4.367 4.877 4.877 0 01-2.144-.5v.05a4.89 4.89 0 003.92 4.772 4.9 4.9 0 01-2.227-.052c0 .022.01.043.01.065a4.89 4.89 0 003.49 3.38 4.86 4.86 0 01-2.24-.87 4.87 4.87 0 004.517 3.35 9.81 9.81 0 01-6.117 2.12c-.4 0-.8-.024-1.19-.07 3.26 2.04 7.12 3.27 11.25 3.27 13.5 0 20.9-11.2 20.9-20.9 0-.32-.008-.64-.024-.95a6.87 6.87 0 001.02-.63 6.87 6.87 0 002.94-3.63 13.74 13.74 0 00-.3-1.15z"/>
-                  </svg>
-                </a>
-                <a
-                  href={profile.social.email}
-                  className="flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-                  aria-label="Email"
-                >
-                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                  </svg>
-                </a>
-              </div>
+                  "Je transforme des idées en expériences numériques."
+                </motion.p>
 
-              {/* Stats */}
-              <div className="mt-16 flex flex-wrap items-center justify-center gap-8 lg:gap-16 text-center">
-                <div>
-                  <div className="font-display font-bold text-3xl lg:text-4xl text-[var(--color-text-primary)]">
-                    {profile.yearsExperience}+
+                {/* Presentation text */}
+                <motion.p
+                  variants={itemVariants}
+                  className="text-[var(--color-text-muted)] text-base lg:text-lg mb-12 max-w-xl leading-relaxed"
+                >
+                  Développeur Full Stack et diplômé d'une Licence, je viens de terminer mon parcours de M1 MIAGE.
+                  Je m'intéresse à la conception et au développement d'applications web modernes, évolutives et utiles.
+                </motion.p>
+
+                {/* CTA Buttons */}
+                <motion.div
+                  variants={itemVariants}
+                  className="flex flex-col sm:flex-row items-start gap-4 mb-16"
+                >
+                  <Button
+                    asAnchor
+                    href="#projects"
+                    variant="primary"
+                    size="lg"
+                    rightIcon={<ArrowRight className="w-5 h-5" />}
+                    className="group"
+                  >
+                    Découvrir mes projets
+                    <motion.span
+                      className="inline-block transition-transform group-hover:translate-x-1"
+                    >
+                      →
+                    </motion.span>
+                  </Button>
+                  <Button
+                    asAnchor
+                    href="#contact"
+                    variant="outline"
+                    size="lg"
+                    className="group"
+                  >
+                    Me contacter
+                    <motion.span
+                      className="inline-block transition-transform group-hover:translate-x-1"
+                    >
+                      <Send className="w-5 h-5" />
+                    </motion.span>
+                  </Button>
+                </motion.div>
+
+                {/* Social Links */}
+                <motion.div
+                  variants={itemVariants}
+                  className="flex items-center gap-6"
+                  role="list"
+                  aria-label="Réseaux sociaux"
+                >
+                  <a
+                    href={profile.social.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-accent-primary)] hover:bg-[var(--color-bg-hover)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+                    aria-label="GitHub"
+                  >
+                    <GitHubIcon className="w-6 h-6 transition-transform group-hover:scale-110" aria-hidden="true" />
+                    <span className="sr-only">GitHub</span>
+                  </a>
+                  <a
+                    href={profile.social.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-info)] hover:bg-[var(--color-bg-hover)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+                    aria-label="LinkedIn"
+                  >
+                    <LinkedInIcon className="w-6 h-6 transition-transform group-hover:scale-110" aria-hidden="true" />
+                    <span className="sr-only">LinkedIn</span>
+                  </a>
+                  <a
+                    href={profile.social.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-accent-tertiary)] hover:bg-[var(--color-bg-hover)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+                    aria-label="Twitter"
+                  >
+                    <TwitterIcon className="w-6 h-6 transition-transform group-hover:scale-110" aria-hidden="true" />
+                    <span className="sr-only">Twitter</span>
+                  </a>
+                  <a
+                    href={profile.social.email}
+                    className="group flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-warning)] hover:bg-[var(--color-bg-hover)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+                    aria-label="Email"
+                  >
+                    <Mail className="w-6 h-6 transition-transform group-hover:scale-110" aria-hidden="true" />
+                    <span className="sr-only">Email</span>
+                  </a>
+                </motion.div>
+              </motion.div>
+
+              {/* Hero Illustration - Right Side */}
+              <motion.div
+                className="hidden lg:flex lg:flex-1 lg:max-w-[500px] lg:max-h-[500px] relative"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1.2, delay: 0.4, ease: [0.4, 0, 0.2, 1] as const }}
+              >
+                <div className="relative">
+                  <HeroIllustration size={480} />
+                  {/* Floating tech badges around illustration */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    {[
+                      { label: "React", top: "10%", left: "5%", color: "#61DAFB" },
+                      { label: "TypeScript", top: "20%", right: "5%", color: "#3178C6" },
+                      { label: "Node.js", bottom: "20%", left: "5%", color: "#339933" },
+                      { label: "PostgreSQL", bottom: "10%", right: "5%", color: "#4169E1" },
+                      { label: "Spring Boot", top: "50%", right: "-5%", color: "#6DB33F" },
+                      { label: "Docker", bottom: "40%", right: "-5%", color: "#2496ED" },
+                    ].map((tech, i) => (
+                      <motion.span
+                        key={tech.label}
+                        variants={iconVariants}
+                        initial="hidden"
+                        animate="visible"
+                        transition={{ delay: 0.8 + i * 0.1, duration: 0.5 }}
+                        className="absolute px-3 py-1.5 text-xs font-medium rounded-full border backdrop-blur-sm transition-all hover:scale-105"
+                        style={{
+                          top: tech.top,
+                          bottom: tech.bottom,
+                          left: tech.left,
+                          right: tech.right,
+                          background: `${tech.color}15`,
+                          borderColor: `${tech.color}40`,
+                          color: tech.color,
+                        }}
+                      >
+                        {tech.label}
+                      </motion.span>
+                    ))}
                   </div>
-                  <div className="text-sm text-[var(--color-text-muted)]">Années d'expérience</div>
                 </div>
-                <div className="w-px h-12 bg-[var(--color-border-primary)] lg:h-16" aria-hidden="true" />
-                <div>
-                  <div className="font-display font-bold text-3xl lg:text-4xl text-[var(--color-text-primary)]">
-                    {profile.projectsCompleted}+
-                  </div>
-                  <div className="text-sm text-[var(--color-text-muted)]">Projets réalisés</div>
-                </div>
-                <div className="w-px h-12 bg-[var(--color-border-primary)] lg:h-16" aria-hidden="true" />
-                <div>
-                  <div className="font-display font-bold text-3xl lg:text-4xl text-[var(--color-text-primary)]">
-                    {profile.technologiesCount}+
-                  </div>
-                  <div className="text-sm text-[var(--color-text-muted)]">Technologies maîtrisées</div>
-                </div>
-              </div>
+              </motion.div>
             </div>
           </Container>
+
+          {/* Scroll indicator */}
+          <motion.div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[var(--color-text-muted)] hidden lg:block"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2, duration: 0.8 }}
+          >
+            <span className="text-xs font-medium uppercase tracking-wider">Descendre</span>
+            <motion.svg
+              className="w-6 h-6"
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 5v14M19 12l-7 7-7-7" />
+            </motion.svg>
+          </motion.div>
         </Section>
 
         {/* Featured Projects Preview */}
@@ -237,7 +398,7 @@ function App() {
                       </Button>
                     )}
                     {project.demo && (
-                      <Button asAnchor href={project.demo} variant="ghost" size="sm" external rightIcon={<span className="w-4 h-4" aria-hidden="true">→</span>} className="flex-1 justify-center">
+                      <Button asAnchor href={project.demo} variant="ghost" size="sm" external rightIcon={<ExternalLink className="w-4 h-4" />} className="flex-1 justify-center">
                         Démo
                       </Button>
                     )}
@@ -252,7 +413,7 @@ function App() {
                 href="#projects"
                 variant="outline"
                 size="lg"
-                rightIcon={<span className="w-5 h-5" aria-hidden="true">→</span>}
+                rightIcon={<ArrowRight className="w-5 h-5" />}
               >
                 Voir tous les projets
               </Button>
@@ -304,10 +465,10 @@ function App() {
                 Discutons de la façon dont je peux vous aider.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button asAnchor href="#contact" variant="primary" size="lg" rightIcon={<span className="w-5 h-5" aria-hidden="true">→</span>}>
+                <Button asAnchor href="#contact" variant="primary" size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
                   Me contacter
                 </Button>
-                <Button asAnchor href={profile.social.linkedin} variant="outline" size="lg" external rightIcon={<span className="w-4 h-4" aria-hidden="true">→</span>}>
+                <Button asAnchor href={profile.social.linkedin} variant="outline" size="lg" external rightIcon={<ExternalLink className="w-4 h-4" />}>
                   LinkedIn
                 </Button>
               </div>

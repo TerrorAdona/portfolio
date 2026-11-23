@@ -2,7 +2,7 @@ import { useState, useEffect, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/Button";
 import { Container } from "./Container";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Download } from "lucide-react";
 
 /**
  * Header component with navigation and theme toggle
@@ -23,6 +23,11 @@ export interface HeaderProps {
     href: string;
     variant?: "primary" | "secondary" | "outline";
   };
+  /** CV download */
+  cvDownload?: {
+    href: string;
+    label?: string;
+  };
   /** Theme toggle */
   showThemeToggle?: boolean;
   /** Fixed header */
@@ -33,10 +38,20 @@ export interface HeaderProps {
   className?: string;
 }
 
+const defaultNavItems = [
+  { label: "Accueil", href: "#hero" },
+  { label: "À propos", href: "#about" },
+  { label: "Compétences", href: "#skills" },
+  { label: "Projets", href: "#projects" },
+  { label: "Parcours", href: "#experience" },
+  { label: "Contact", href: "#contact" },
+] as const;
+
 export function Header({
   logo,
-  navItems = [],
+  navItems = defaultNavItems,
   cta,
+  cvDownload,
   showThemeToggle = true,
   fixed = true,
   transparent = false,
@@ -82,10 +97,10 @@ export function Header({
   return (
     <header
       className={cn(
-        "w-full z-[300] transition-all duration-200",
+        "w-full z-[300] transition-all duration-300",
         fixed && "fixed top-0 left-0",
         shouldShowBackground
-          ? "bg-[var(--color-bg-primary)]/80 backdrop-blur-[20px] border-b border-[var(--color-border-primary)] shadow-[var(--shadow-sm)]"
+          ? "bg-[var(--color-bg-primary)]/90 backdrop-blur-[20px] border-b border-[var(--color-border-primary)] shadow-[var(--shadow-sm)]"
           : "bg-transparent",
         className
       )}
@@ -97,8 +112,8 @@ export function Header({
           <div className="flex-shrink-0" aria-label="Accueil">
             {logo || (
               <a
-                href="/"
-                className="font-display font-bold text-xl text-[var(--color-text-primary)] hover:opacity-80 transition-opacity"
+                href="#hero"
+                className="font-display font-bold text-xl text-[var(--color-text-primary)] hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] rounded-sm"
                 aria-label="Rakotoarinivo Herilala - Accueil"
               >
                 RH
@@ -107,18 +122,32 @@ export function Header({
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6" aria-label="Navigation principale">
+          <nav className="hidden lg:flex items-center gap-8" aria-label="Navigation principale">
             {navItems.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
                 target={item.external ? "_blank" : undefined}
                 rel={item.external ? "noopener noreferrer" : undefined}
-                className="text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+                className="relative px-1 py-2 text-sm font-medium text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-[var(--color-accent-primary)] after:transition-all hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] rounded-sm"
               >
                 {item.label}
               </a>
             ))}
+
+            {/* CV Download Button */}
+            {cvDownload && (
+              <a
+                href={cvDownload.href}
+                download
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-sm bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] border border-[var(--color-border-primary)] hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-border-secondary)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+                aria-label={`Télécharger le CV - ${cvDownload.label || "CV"}`}
+              >
+                <Download className="w-4 h-4" aria-hidden="true" />
+                <span>{cvDownload.label || "CV"}</span>
+              </a>
+            )}
+
             {cta && (
               <Button
                 asAnchor
@@ -130,6 +159,7 @@ export function Header({
                 {cta.label}
               </Button>
             )}
+
             {showThemeToggle && (
               <button
                 onClick={toggleTheme}
@@ -143,7 +173,7 @@ export function Header({
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 rounded-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors"
+            className="lg:hidden p-2 rounded-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-menu"
@@ -157,13 +187,13 @@ export function Header({
         <div
           id="mobile-menu"
           className={cn(
-            "lg:hidden overflow-hidden transition-all duration-200 ease-out",
+            "lg:hidden overflow-hidden transition-all duration-300 ease-out",
             isMobileMenuOpen ? "max-h-96 opacity-100 pb-6" : "max-h-0 opacity-0"
           )}
           role="navigation"
           aria-label="Menu mobile"
         >
-          <div className="flex flex-col gap-2 pt-4 border-t border-[var(--color-border-primary)]">
+          <div className="flex flex-col gap-1 pt-4 border-t border-[var(--color-border-primary)]">
             {navItems.map((item) => (
               <a
                 key={item.href}
@@ -176,6 +206,20 @@ export function Header({
                 {item.label}
               </a>
             ))}
+
+            {/* CV Download in Mobile */}
+            {cvDownload && (
+              <a
+                href={cvDownload.href}
+                download
+                onClick={handleNavClick}
+                className="flex items-center justify-center gap-2 px-4 py-3 text-base font-medium rounded-sm bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] border border-[var(--color-border-primary)] hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-border-secondary)] transition-all"
+              >
+                <Download className="w-5 h-5" aria-hidden="true" />
+                <span>{cvDownload.label || "Télécharger CV"}</span>
+              </a>
+            )}
+
             {cta && (
               <Button
                 asAnchor

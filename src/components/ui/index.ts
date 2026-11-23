@@ -13,3 +13,5 @@ export * from "./Tooltip";
 export * from "./Modal";
 export * from "./FocusTrap";
 export * from "./ScrollArea";
+export * from "./HeroIllustration";
+export * from "./BrandIcons";
