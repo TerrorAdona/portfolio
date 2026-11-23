@@ -3,7 +3,7 @@ import { cn } from "../../lib/utils";
 import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
-import { ExternalLink, Github, ArrowRight } from "lucide-react";
+import { GitHubIcon, ExternalLinkIcon, ArrowRightIcon } from "../ui/BrandIcons";
 
 /**
  * Project Card component
@@ -144,7 +144,7 @@ export function ProjectCard({
               variant="ghost"
               size="sm"
               external
-              leftIcon={<Github className="w-4 h-4" />}
+              leftIcon={<GitHubIcon className="w-4 h-4" />}
               className="flex-1 justify-center"
             >
               Code
@@ -157,14 +157,14 @@ export function ProjectCard({
               variant="ghost"
               size="sm"
               external
-              rightIcon={<ExternalLink className="w-4 h-4" />}
+              rightIcon={<ExternalLinkIcon className="w-4 h-4" />}
               className="flex-1 justify-center"
             >
               Démo
             </Button>
           )}
           {isInteractive && !project.repository && !project.demo && (
-            <Button variant="ghost" size="sm" className="flex-1 justify-center" rightIcon={<ArrowRight className="w-4 h-4" />}>
+            <Button variant="ghost" size="sm" className="flex-1 justify-center" rightIcon={<ArrowRightIcon className="w-4 h-4" />}>
               Voir détails
             </Button>
           )}
