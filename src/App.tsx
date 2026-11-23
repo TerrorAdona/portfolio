@@ -9,6 +9,7 @@ import { Badge } from "./components/ui/Badge";
 import { TechBadgeCloud } from "./components/projects/TechBadge";
 import { HeroIllustration } from "./components/ui/HeroIllustration";
 import { GitHubIcon, LinkedInIcon, TwitterIcon, SparklesIcon } from "./components/ui/BrandIcons";
+import { ScrollReveal } from "./components/ui/ScrollReveal";
 import { profile } from "./data/profile";
 import { projects } from "./data/projects";
 import { skills } from "./data/skills";
@@ -443,22 +444,25 @@ function App() {
         {/* Featured Projects Preview */}
         <Section id="projects" size="md" background="secondary">
           <Container size="xl" padding="md">
-            <header className="mb-12 text-center max-w-2xl mx-auto">
-              <Badge variant="accent" size="sm" className="mb-4">
-                <span className="w-4 h-4 mr-1" aria-hidden="true">💻</span>
-                Projets phares
-              </Badge>
-              <h2 className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
-                Projets sélectionnés
-              </h2>
-              <p className="text-[var(--color-text-secondary)] text-lg">
-                Une sélection de mes projets les plus aboutis, démontrant ma capacité à livrer des solutions complètes, de la conception au déploiement.
-              </p>
-            </header>
+            <ScrollReveal variant="fadeInUp" delay={100}>
+              <header className="mb-12 text-center max-w-2xl mx-auto">
+                <Badge variant="accent" size="sm" className="mb-4">
+                  <span className="w-4 h-4 mr-1" aria-hidden="true">💻</span>
+                  Projets phares
+                </Badge>
+                <h2 className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
+                  Projets sélectionnés
+                </h2>
+                <p className="text-[var(--color-text-secondary)] text-lg">
+                  Une sélection de mes projets les plus aboutis, démontrant ma capacité à livrer des solutions complètes, de la conception au déploiement.
+                </p>
+              </header>
+            </ScrollReveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredProjects.map((project) => (
-                <Card key={project.slug} variant="interactive" padding="md" className="flex flex-col h-full">
+            <ScrollReveal variant="fadeInUp" delay={200}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {featuredProjects.map((project) => (
+                  <Card key={project.slug} variant="interactive" padding="md" className="flex flex-col h-full">
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="min-w-0 flex-1">
                       <h3 className="font-semibold text-[var(--color-text-primary)] truncate">{project.name}</h3>
@@ -492,6 +496,7 @@ function App() {
                 </Card>
               ))}
             </div>
+            </ScrollReveal>
 
             <div className="mt-10 text-center">
               <Button
@@ -510,20 +515,23 @@ function App() {
         {/* Skills Preview */}
         <Section id="skills" size="md" background="none">
           <Container size="xl" padding="md">
-            <header className="mb-12 text-center max-w-2xl mx-auto">
-              <Badge variant="accent" size="sm" className="mb-4">
-                <span className="w-4 h-4 mr-1" aria-hidden="true">⚡</span>
-                Stack technique
-              </Badge>
-              <h2 className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
+            <ScrollReveal variant="fadeInUp" delay={100}>
+              <header className="mb-12 text-center max-w-2xl mx-auto">
+                <Badge variant="accent" size="sm" className="mb-4">
+                  <span className="w-4 h-4 mr-1" aria-hidden="true">⚡</span>
+                  Stack technique
+                </Badge>
+                <h2 className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
                 Technologies maîtrisées
               </h2>
               <p className="text-[var(--color-text-secondary)] text-lg">
                 Une expertise ciblée sur l'écosystème JavaScript/TypeScript moderne et les architectures backend robustes.
               </p>
             </header>
+            </ScrollReveal>
 
-            <TechBadgeCloud
+            <ScrollReveal variant="fadeInUp" delay={200}>
+              <TechBadgeCloud
               technologies={skills.filter((s) => s.featured && s.level >= 4).map((s) => ({
                 name: s.name,
                 category: s.category,
@@ -532,33 +540,36 @@ function App() {
               size="md"
               showCategory={true}
             />
+            </ScrollReveal>
           </Container>
         </Section>
 
         {/* CTA Section */}
         <Section size="md" background="gradient" className="relative">
           <Container size="xl" padding="md" center={true}>
-            <div className="max-w-2xl text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6">
-                <span className="w-4 h-4" aria-hidden="true">✨</span>
-                <span className="font-medium">Open to opportunities</span>
+            <ScrollReveal variant="fadeInUp" delay={100}>
+              <div className="max-w-2xl text-center">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6">
+                  <span className="w-4 h-4" aria-hidden="true">✨</span>
+                  <span className="font-medium">Open to opportunities</span>
+                </div>
+                <h2 className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
+                  Disponible pour de nouveaux défis
+                </h2>
+                <p className="text-[var(--color-text-secondary)] text-lg mb-8">
+                  Vous avez un projet en tête ? Besoin d'un développeur Full Stack pour votre équipe ?
+                  Discutons de la façon dont je peux vous aider.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Button asAnchor href="#contact" variant="primary" size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
+                    Me contacter
+                  </Button>
+                  <Button asAnchor href={profile.social.linkedin} variant="outline" size="lg" external rightIcon={<ExternalLink className="w-4 h-4" />}>
+                    LinkedIn
+                  </Button>
+                </div>
               </div>
-              <h2 className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
-                Disponible pour de nouveaux défis
-              </h2>
-              <p className="text-[var(--color-text-secondary)] text-lg mb-8">
-                Vous avez un projet en tête ? Besoin d'un développeur Full Stack pour votre équipe ?
-                Discutons de la façon dont je peux vous aider.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button asAnchor href="#contact" variant="primary" size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
-                  Me contacter
-                </Button>
-                <Button asAnchor href={profile.social.linkedin} variant="outline" size="lg" external rightIcon={<ExternalLink className="w-4 h-4" />}>
-                  LinkedIn
-                </Button>
-              </div>
-            </div>
+            </ScrollReveal>
           </Container>
         </Section>
 
