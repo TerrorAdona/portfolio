@@ -13,9 +13,9 @@ export interface Education {
   institution: string;
   /** Location */
   location: string;
-  /** Start date */
+  /** Start date (YYYY-MM) */
   startDate: string;
-  /** End date */
+  /** End date (YYYY-MM) */
   endDate: string;
   /** Currently studying */
   current?: boolean;
@@ -33,6 +33,91 @@ export interface Education {
   order?: number;
 }
 
+export interface AcademicProject {
+  /** Unique identifier */
+  id: string;
+  /** Project title */
+  title: string;
+  /** Description */
+  description: string;
+  /** Institution */
+  institution: string;
+  /** Period (human readable) */
+  period: string;
+  /** Technologies used */
+  technologies: string[];
+  /** Repository URL */
+  repository?: string;
+  /** Demo URL */
+  demo?: string;
+  /** Role in project */
+  role?: string;
+  /** Team size */
+  teamSize?: number;
+  /** Key achievements */
+  achievements?: string[];
+  /** Display order */
+  order?: number;
+}
+
+export interface ProfessionalExperience {
+  /** Unique identifier */
+  id: string;
+  /** Company/Organization */
+  company: string;
+  /** Role/Title */
+  role: string;
+  /** Location */
+  location: string;
+  /** Start date (YYYY-MM) */
+  startDate: string;
+  /** End date (YYYY-MM) */
+  endDate?: string;
+  /** Currently working */
+  current?: boolean;
+  /** Description */
+  description: string;
+  /** Key achievements */
+  achievements: string[];
+  /** Technologies used */
+  technologies: string[];
+  /** Employment type */
+  type: "full-time" | "part-time" | "contract" | "internship" | "freelance" | "volunteer";
+  /** Company logo */
+  logo?: string;
+  /** Company website */
+  website?: string;
+  /** Display order */
+  order?: number;
+  /** Featured */
+  featured?: boolean;
+}
+
+export interface Internship {
+  /** Unique identifier */
+  id: string;
+  /** Company/Organization */
+  company: string;
+  /** Role/Title */
+  role: string;
+  /** Location */
+  location: string;
+  /** Start date (YYYY-MM) */
+  startDate: string;
+  /** End date (YYYY-MM) */
+  endDate?: string;
+  /** Description */
+  description: string;
+  /** Achievements */
+  achievements: string[];
+  /** Technologies used */
+  technologies: string[];
+  /** Supervisor */
+  supervisor?: string;
+  /** Display order */
+  order?: number;
+}
+
 export interface Certification {
   /** Unique identifier */
   id: string;
@@ -40,7 +125,7 @@ export interface Certification {
   name: string;
   /** Issuing organization */
   issuer: string;
-  /** Issue date */
+  /** Issue date (YYYY-MM) */
   date: string;
   /** Expiry date */
   expiryDate?: string;
@@ -59,4 +144,6 @@ export interface Certification {
 export interface EducationPageData {
   education: Education[];
   certifications: Certification[];
+  academicProjects: typeof import("../data/education").academicProjects;
+  professionalExperiences: typeof import("../data/education").professionalExperiences;
 }
