@@ -128,7 +128,7 @@ export function Header({
                 className="site-brand-link font-display font-bold text-xl hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] rounded-sm"
                 aria-label="Rakotoarinivo Herilala - Accueil"
               >
-                RH
+                Rakotoarinivo Herilala
               </a>
             )}
           </div>

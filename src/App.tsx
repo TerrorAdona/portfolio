@@ -169,8 +169,7 @@ function PortfolioHome() {
             className="site-brand-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] rounded-sm"
             aria-label="Rakotoarinivo Herilala - Accueil"
           >
-            <span className="site-brand-mark" aria-hidden="true">RH</span>
-            <span className="site-brand-name">Rakotoarinivo <strong>Herilala</strong></span>
+            <span className="site-brand-name">Rakotoarinivo Herilala</span>
           </a>
         }
         navItems={portfolioNavItems}
