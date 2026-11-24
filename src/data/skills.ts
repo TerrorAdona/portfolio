@@ -5,10 +5,9 @@
  */
 
 import type { Skill, SkillCategory } from "../types/skill";
-import { SkillStatus, STATUS_LABELS } from "../types/skill";
+import { SkillStatus } from "../types/skill";
 
 export type { SkillStatus };
-export { STATUS_LABELS };
 
 export const skills: Skill[] = [
   // ============================================================

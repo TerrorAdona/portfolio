@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, HTMLMotionProps } from "framer-motion";
-import { useScrollReveal } from "../../hooks/useScrollSpy";
-import { forwardRef, useRef } from "react";
+import { motion, type HTMLMotionProps } from "framer-motion";
+import { forwardRef } from "react";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 
 /**
  * ScrollReveal component - reveals content when it enters viewport
@@ -63,14 +63,7 @@ export const ScrollReveal = forwardRef<HTMLDivElement, ScrollRevealProps>(
     },
     ref
   ) => {
-    // Create internal ref if none provided
-    const internalRef = useRef<HTMLDivElement>(null);
-    const mergedRef = ref ?? internalRef;
-
-    const isVisible = useScrollReveal(mergedRef, {
-      rootMargin,
-      threshold: 0.1,
-    });
+    const reducedMotion = useReducedMotion();
 
     const variants = {
       hidden: variantMap[variant].hidden,
@@ -87,8 +80,10 @@ export const ScrollReveal = forwardRef<HTMLDivElement, ScrollRevealProps>(
     return (
       <motion.div
         ref={ref}
-        initial="hidden"
-        animate={isVisible ? "visible" : "hidden"}
+        initial={reducedMotion ? false : "hidden"}
+        whileInView={reducedMotion ? undefined : "visible"}
+        animate={reducedMotion ? "visible" : undefined}
+        viewport={{ once, amount: 0.12, margin: rootMargin }}
         variants={variants}
         className={className}
         {...props}
@@ -117,6 +112,8 @@ export function StaggerContainer({
   delayChildren = 100,
   className,
 }: StaggerContainerProps) {
+  const reducedMotion = useReducedMotion();
+
   return (
     <motion.div
       className={className}
@@ -130,8 +127,9 @@ export function StaggerContainer({
           },
         },
       }}
-      initial="hidden"
+      initial={reducedMotion ? false : "hidden"}
       animate="visible"
+      transition={reducedMotion ? { duration: 0 } : undefined}
     >
       {children}
     </motion.div>

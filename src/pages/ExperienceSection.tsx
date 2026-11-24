@@ -17,8 +17,8 @@ export function ExperienceSection() {
   return (
     <Section id="experience" size="lg" background="secondary">
       <Container size="xl" padding="md">
-        <header className="mb-12 text-center max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6">
+        <header className="section-heading mb-12 text-center max-w-2xl mx-auto">
+          <div className="section-eyebrow inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6">
             <Briefcase className="w-4 h-4" aria-hidden="true" />
             <span className="font-medium">Parcours professionnel</span>
           </div>

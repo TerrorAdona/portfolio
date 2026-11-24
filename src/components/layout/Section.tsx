@@ -1,4 +1,5 @@
 import { forwardRef, type HTMLAttributes } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "../../lib/utils";
 import { Container } from "./Container";
 
@@ -6,7 +7,7 @@ import { Container } from "./Container";
  * Section component - semantic section wrapper
  */
 
-export interface SectionProps extends HTMLAttributes<HTMLSectionElement> {
+export interface SectionProps extends HTMLAttributes<HTMLElement> {
   /** Vertical size */
   size?: "sm" | "md" | "lg";
   /** Background variant */
@@ -24,9 +25,9 @@ export interface SectionProps extends HTMLAttributes<HTMLSectionElement> {
 }
 
 const sizeStyles = {
-  sm: "py-16 lg:py-24",
-  md: "py-24 lg:py-32",
-  lg: "py-32 lg:py-48",
+  sm: "py-14 lg:py-20",
+  md: "py-20 lg:py-28",
+  lg: "py-24 lg:py-32",
 } as const;
 
 const backgroundStyles = {
@@ -37,13 +38,13 @@ const backgroundStyles = {
   glass: "bg-[var(--glass-bg)] backdrop-blur-[20px]",
 } as const;
 
-export const Section = forwardRef<HTMLSectionElement, SectionProps>(
+export const Section = forwardRef<HTMLElement, SectionProps>(
   (
     {
       size = "md",
       background = "none",
       container = "xl",
-      containerPadding = "md",
+      containerPadding = "none",
       align = "start",
       fullWidth = false,
       id,
@@ -53,6 +54,23 @@ export const Section = forwardRef<HTMLSectionElement, SectionProps>(
     },
     ref
   ) => {
+    const reducedMotion = useReducedMotion();
+    const revealProps = id === "hero" || reducedMotion
+      ? { initial: false as const }
+      : {
+          initial: "hidden" as const,
+          whileInView: "visible" as const,
+          viewport: { once: true, amount: 0.08 },
+          variants: {
+            hidden: { opacity: 0, y: 14 },
+            visible: {
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
+            },
+          },
+        };
+
     const alignStyles = {
       start: "items-start text-left",
       center: "items-center text-center",
@@ -60,14 +78,15 @@ export const Section = forwardRef<HTMLSectionElement, SectionProps>(
     } as const;
 
     const content = (
-      <div
+      <motion.div
         className={cn(
           "w-full flex flex-col",
           alignStyles[align]
         )}
+        {...revealProps}
       >
         {children}
-      </div>
+      </motion.div>
     );
 
     if (fullWidth) {
@@ -100,11 +119,13 @@ export const Section = forwardRef<HTMLSectionElement, SectionProps>(
         )}
         {...props}
       >
-        <div className="relative z-10 w-full">
+        <motion.div className="relative z-10 w-full" {...revealProps}>
           <Container size={container} padding={containerPadding} center={false}>
-            {content}
+            <motion.div className={cn("w-full flex flex-col", alignStyles[align])}>
+              {children}
+            </motion.div>
           </Container>
-        </div>
+        </motion.div>
       </section>
     );
   }
@@ -190,7 +211,7 @@ const gapStyles = {
   sm: "gap-4",
   md: "gap-6",
   lg: "gap-8",
-} as const;
+} as const satisfies Record<"sm" | "md" | "lg", string>;
 
 export function Grid({
   cols,
@@ -202,6 +223,7 @@ export function Grid({
   children,
   ...props
 }: GridProps) {
+  const gapClass = typeof gap === "number" ? `gap-[${gap}px]` : gapStyles[gap];
   const colStyles = autoFit
     ? `grid-cols-[repeat(auto-fit,minmax(${minColWidth},1fr))]`
     : cols
@@ -220,7 +242,7 @@ export function Grid({
       className={cn(
         "grid",
         colStyles,
-        gapStyles[gap],
+        gapClass,
         alignStyles[align],
         className
       )}

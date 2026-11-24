@@ -1,4 +1,4 @@
-import { forwardRef, type ButtonHTMLAttributes, type AnchorHTMLAttributes } from "react";
+import { forwardRef, type ButtonHTMLAttributes, type AnchorHTMLAttributes, type Ref } from "react";
 import { cn } from "../../lib/utils";
 
 /**
@@ -6,9 +6,10 @@ import { cn } from "../../lib/utils";
  * Following the design system specifications
  */
 
-export interface ButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "size">,
-    Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "size"> {
+type SharedButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "size" | "ref"> &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "size" | "ref">;
+
+export interface ButtonProps extends SharedButtonProps {
   /** Button variant */
   variant?: "primary" | "secondary" | "outline" | "ghost" | "destructive" | "success" | "warning";
   /** Button size */
@@ -55,7 +56,7 @@ const sizeStyles = {
 } as const;
 
 const baseStyles =
-  "inline-flex items-center justify-center font-medium rounded-sm transition-all duration-120 ease-out focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-bg-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-border-focus)] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none";
+  "inline-flex items-center justify-center font-medium rounded-lg transition-all duration-120 ease-out focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-bg-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-border-focus)] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none";
 
 export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonProps>(
   (
@@ -75,7 +76,7 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
       disabled,
       ...props
     },
-    ref
+    ref: Ref<HTMLButtonElement | HTMLAnchorElement>
   ) => {
     const isDisabled = disabled || loading;
     const Component = asAnchor && href ? "a" : "button";
@@ -96,6 +97,7 @@ export const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPr
           variantStyles[variant],
           sizeStyles[size],
           fullWidth && "w-full",
+          !noAnimation && "motion-interactive",
           noAnimation && "transition-none",
           className
         )}
@@ -194,9 +196,9 @@ export function ButtonGroup({
           ? ""
             : "border-r-0 border-l";
 
-        return React.cloneElement(child as React.ReactElement<any>, {
+        return React.cloneElement(child as React.ReactElement, {
           className: cn(
-            (child.props as any).className,
+            (child.props as Record<string, unknown>).className,
             radiusClasses,
             borderClasses,
             variant && `btn-${variant}`,

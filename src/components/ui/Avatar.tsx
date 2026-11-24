@@ -163,7 +163,7 @@ export function AvatarGroup({
             index > 0 && "ring-2 ring-[var(--color-bg-primary)]"
           )}
         >
-          {React.cloneElement(avatar, { size })}
+          {React.cloneElement(avatar as React.ReactElement<AvatarProps>, { size })}
         </span>
       ))}
       {remainingCount > 0 && (

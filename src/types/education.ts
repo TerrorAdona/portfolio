@@ -29,6 +29,8 @@ export interface Education {
   logo?: string;
   /** Website */
   website?: string;
+  /** Repository URL */
+  repository?: string;
   /** Display order */
   order?: number;
 }

@@ -14,7 +14,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: true,
-    minify: 'esbuild',
+    minify: 'oxc',
     cssMinify: true,
   },
   server: {

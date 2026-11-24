@@ -1,9 +1,9 @@
-import { type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
 import { GitHubIcon, ExternalLink, ArrowRightIcon } from "../ui/BrandIcons";
+import { Link } from "react-router-dom";
 
 /**
  * Project Card component
@@ -70,7 +70,7 @@ export function ProjectCard({
       onClick={onClick}
       ariaLabel={isInteractive ? `Voir le projet ${project.name}` : undefined}
       className={cn(
-        "flex flex-col h-full",
+        "portfolio-project-card flex flex-col h-full",
         variant === "featured" && "lg:col-span-2 lg:row-span-2",
         className
       )}
@@ -96,10 +96,15 @@ export function ProjectCard({
         {/* Header */}
         <div className="flex items-start justify-between gap-3 mb-2">
           <div className="min-w-0 flex-1">
-            <h3 className="font-display font-semibold text-[var(--color-text-primary)] truncate">
-              {project.name}
+            <h3 className="font-display font-semibold text-[var(--color-text-primary)]">
+              <Link
+                to={`/projects/${project.slug}`}
+                className="rounded-sm transition-colors hover:text-[var(--color-accent-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+              >
+                {project.name}
+              </Link>
             </h3>
-            <p className="text-sm text-[var(--color-text-muted)] mt-0.5 truncate">
+            <p className="text-sm text-[var(--color-text-muted)] mt-0.5 line-clamp-2">
               {project.tagline}
             </p>
           </div>

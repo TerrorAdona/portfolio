@@ -1,4 +1,5 @@
-import { Suspense, lazy, useState, useEffect } from "react";
+import { Suspense, lazy, useState, useEffect, useRef } from "react";
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Header } from "./components/layout/Header";
 import { Footer } from "./components/layout/Footer";
 import { Section } from "./components/layout/Section";
@@ -7,16 +8,14 @@ import { Button } from "./components/ui/Button";
 import { Card } from "./components/ui/Card";
 import { Badge } from "./components/ui/Badge";
 import { TechBadgeCloud } from "./components/projects/TechBadge";
-import { HeroIllustration } from "./components/ui/HeroIllustration";
-import { GitHubIcon, LinkedInIcon, TwitterIcon, SparklesIcon } from "./components/ui/BrandIcons";
+import { GitHubIcon, LinkedInIcon, TwitterIcon } from "./components/ui/BrandIcons";
 import { ScrollReveal } from "./components/ui/ScrollReveal";
 import { profile } from "./data/profile";
 import { projects } from "./data/projects";
 import { skills } from "./data/skills";
-import { ExternalLink, ArrowRight, Send, Mail } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useScrollProgress, useReducedMotion } from "./hooks";
-import { pageVariants, backToTopVariants, cursorVariants, cursorFollowerVariants } from "./lib/animations";
+import { ExternalLink, ArrowRight, Mail } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion, useScroll } from "framer-motion";
+import { pageVariants, backToTopVariants } from "./lib/animations";
 import "./styles/globals.css";
 
 // Lazy load heavy sections
@@ -25,6 +24,7 @@ const AboutSection = lazy(() => import("./pages/AboutSection"));
 const SkillsSection = lazy(() => import("./pages/SkillsSection").then((m) => ({ default: m.SkillsSection })));
 const ExperienceSection = lazy(() => import("./pages/ExperienceSection").then((m) => ({ default: m.ExperienceSection })));
 const ContactSection = lazy(() => import("./pages/ContactSection").then((m) => ({ default: m.ContactSection })));
+const ProjectDetailPage = lazy(() => import("./pages/ProjectDetail"));
 
 // Skeleton loader
 function SectionSkeleton() {
@@ -48,8 +48,8 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
+      staggerChildren: 0.05,
+      delayChildren: 0.04,
     },
   },
 };
@@ -60,57 +60,78 @@ const itemVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.8,
-      ease: [0.4, 0, 0.2, 1] as const,
+      duration: 0.44,
+      ease: [0.22, 1, 0.36, 1] as const,
     },
   },
 };
 
-const badgeVariants = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.6,
-      ease: [0.34, 1.56, 0.64, 1] as const,
-    },
-  },
-};
+const portfolioNavItems = [
+  { label: "Accueil", href: "#hero" },
+  { label: "À propos", href: "#about" },
+  { label: "Compétences", href: "#skills" },
+  { label: "Projets", href: "#projects" },
+  { label: "Parcours", href: "#experience" },
+  { label: "Contact", href: "#contact" },
+];
 
-const iconVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      ease: [0.34, 1.56, 0.64, 1] as const,
-    },
-  },
-};
-
-function App() {
+function PortfolioHome() {
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const scrollProgress = useScrollProgress();
+  const { scrollYProgress } = useScroll();
   const reducedMotion = useReducedMotion();
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
-  const [cursorVisible, setCursorVisible] = useState(false);
+  const location = useLocation();
 
-  // Track cursor position for custom cursor
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
-      setCursorVisible(true);
+    let frame = 0;
+    let targetObserver: MutationObserver | undefined;
+
+    const scrollToHashTarget = () => {
+      targetObserver?.disconnect();
+      targetObserver = undefined;
+      if (frame) window.cancelAnimationFrame(frame);
+
+      const encodedTargetId = window.location.hash.slice(1);
+      if (!encodedTargetId) return;
+
+      let targetId = encodedTargetId;
+      try {
+        targetId = decodeURIComponent(encodedTargetId);
+      } catch {
+        // Keep the raw fragment if it is not valid URI encoding.
+      }
+
+      const scrollWhenAvailable = () => {
+        const target = document.getElementById(targetId);
+        if (!target) return false;
+
+        targetObserver?.disconnect();
+        targetObserver = undefined;
+        frame = window.requestAnimationFrame(() => {
+          target.scrollIntoView({
+            behavior: reducedMotion ? "auto" : "smooth",
+            block: "start",
+          });
+        });
+        return true;
+      };
+
+      if (scrollWhenAvailable()) return;
+
+      // Some targets live inside lazy-loaded sections. Wait for their DOM node
+      // instead of giving up after a fixed number of animation frames.
+      targetObserver = new MutationObserver(scrollWhenAvailable);
+      targetObserver.observe(document.body, { childList: true, subtree: true });
     };
-    const handleMouseLeave = () => setCursorVisible(false);
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseleave", handleMouseLeave);
+
+    scrollToHashTarget();
+    window.addEventListener("hashchange", scrollToHashTarget);
+
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("hashchange", scrollToHashTarget);
+      targetObserver?.disconnect();
+      if (frame) window.cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [location.hash, reducedMotion]);
 
   // Show back to top button after scrolling
   useEffect(() => {
@@ -125,78 +146,34 @@ function App() {
     window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
   };
 
-  const navItems = [
-    { label: "Accueil", href: "#hero" },
-    { label: "À propos", href: "#about" },
-    { label: "Compétences", href: "#skills" },
-    { label: "Projets", href: "#projects" },
-    { label: "Parcours", href: "#experience" },
-    { label: "Contact", href: "#contact" },
-  ];
-
   const featuredProjects = projects.filter((p) => p.featured);
 
   return (
     <>
-      {/* Skip link for accessibility */}
-      <a href="#main-content" className="skip-link">
-        Aller au contenu principal
-      </a>
-
       {/* Scroll Progress Indicator */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 z-[9999] pointer-events-none"
-        style={{ background: "linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-tertiary))" }}
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: scrollProgress }}
-        transition={{ duration: 0.1, ease: "linear" }}
+        style={{
+          scaleX: scrollYProgress,
+          transformOrigin: "0% 50%",
+          background: "linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-tertiary))",
+        }}
         aria-hidden="true"
       />
-
-      {/* Custom Cursor (Desktop only, respects reduced motion) */}
-      {!reducedMotion && cursorVisible && (
-        <div>
-          <motion.div
-            variants={cursorVariants}
-            className="fixed w-8 h-8 rounded-full border-2 pointer-events-none z-[9999] mix-blend-difference"
-            style={{
-              left: cursorPos.x - 16,
-              top: cursorPos.y - 16,
-              borderColor: "var(--color-text-primary)",
-              backgroundColor: "transparent",
-            }}
-            animate={{ x: 0, y: 0 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-            aria-hidden="true"
-          />
-          <motion.div
-            variants={cursorFollowerVariants}
-            className="fixed w-24 h-24 rounded-full pointer-events-none z-[9998]"
-            style={{
-              left: cursorPos.x - 48,
-              top: cursorPos.y - 48,
-              backgroundColor: "var(--color-accent-primary)",
-              opacity: 0.15,
-            }}
-            animate={{ x: 0, y: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            aria-hidden="true"
-          />
-        </div>
-      )}
 
       {/* Header / Navbar */}
       <Header
         logo={
           <a
             href="#hero"
-            className="font-display font-bold text-xl text-[var(--color-text-primary)] hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] rounded-sm"
+            className="site-brand-link focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-primary)] rounded-sm"
             aria-label="Rakotoarinivo Herilala - Accueil"
           >
-            RH
+            <span className="site-brand-mark" aria-hidden="true">RH</span>
+            <span className="site-brand-name">Rakotoarinivo <strong>Herilala</strong></span>
           </a>
         }
-        navItems={navItems}
+        navItems={portfolioNavItems}
         cvDownload={{
           href: "/cv.pdf",
           label: "CV",
@@ -204,253 +181,136 @@ function App() {
         showThemeToggle={true}
         fixed={true}
         transparent={true}
+        className="site-header"
       />
 
       {/* Main Content */}
-      <AnimatePresence mode="wait">
-        <motion.main
-          id="main-content"
-          className="min-h-screen"
-          variants={pageVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-        >
+      <main id="main-content" className="portfolio-main min-h-screen">
         {/* Hero Section */}
-        <Section id="hero" size="lg" background="gradient" className="relative overflow-hidden min-h-screen flex items-center">
-          {/* Background decorative elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[var(--color-accent-primary)]/5 blur-3xl animate-float" />
-            <div className="absolute bottom-1/4 right-1/4 w-72 h-72 rounded-full bg-[var(--color-accent-tertiary)]/5 blur-3xl animate-float" style={{ animationDelay: "1s" }} />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-[var(--color-accent-primary)]/10" />
-          </div>
-
+        <Section id="hero" size="lg" background="none" className="hero-section">
           <Container size="xl" padding="lg" center={false}>
-            <div className="flex lg:flex-row-reverse items-center justify-between gap-12 lg:gap-20 min-h-[calc(100vh-4rem)]">
-              {/* Hero Content - Left Side */}
+            <div className="hero-layout">
               <motion.div
-                className="flex-1 max-w-2xl text-left lg:text-left"
+                className="hero-copy"
                 variants={containerVariants}
-                initial="hidden"
+                initial={reducedMotion ? false : "hidden"}
                 animate="visible"
               >
-                {/* Badge - Available for opportunities */}
-                <motion.div
-                  variants={badgeVariants}
-                  className="mb-8"
-                >
-                  <Badge variant="accent" size="md" className="inline-flex items-center gap-2 px-4 py-2">
-                    <motion.span
-                      initial={{ scale: 0, rotate: -90 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      transition={{ delay: 0.3, duration: 0.5, ease: [0.34, 1.56, 0.64, 1] as const }}
-                      className="w-4 h-4 flex-shrink-0"
-                      aria-hidden="true"
-                    >
-                      <SparklesIcon className="w-4 h-4" />
-                    </motion.span>
-                    <span className="font-medium">Disponible pour opportunités professionnelles</span>
-                  </Badge>
-                </motion.div>
+                <motion.p variants={itemVariants} className="hero-availability">
+                  {"Disponible pour de nouvelles opportunit\u00e9s"}
+                </motion.p>
 
-                {/* Name */}
-                <motion.h1
-                  variants={itemVariants}
-                  className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-6 leading-[1.1]"
-                  style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)" }}
-                >
-                  Rakotoarinivo Herilala
+                <motion.h1 variants={itemVariants} className="hero-title">
+                  <span>Rakotoarinivo</span>
+                  <span>Herilala</span>
                 </motion.h1>
 
-                {/* Title */}
-                <motion.p
-                  variants={itemVariants}
-                  className="text-[var(--color-accent-primary)] font-semibold text-lg mb-4 tracking-wide uppercase"
-                >
-                  Full Stack Developer
+                <motion.p variants={itemVariants} className="hero-role">
+                  {"D\u00e9veloppeur Full Stack"}
                 </motion.p>
 
-                {/* Tagline / Accroche */}
-                <motion.p
-                  variants={itemVariants}
-                  className="text-[var(--color-text-secondary)] text-xl lg:text-2xl mb-10 max-w-xl leading-relaxed"
-                >
-                  "Je transforme des idées en expériences numériques."
+                <motion.p variants={itemVariants} className="hero-lead">
+                  {"Je transforme des id\u00e9es en applications utiles, robustes et accessibles."}
                 </motion.p>
 
-                {/* Presentation text */}
-                <motion.p
-                  variants={itemVariants}
-                  className="text-[var(--color-text-muted)] text-base lg:text-lg mb-12 max-w-xl leading-relaxed"
-                >
-                  Développeur Full Stack et diplômé d'une Licence, je viens de terminer mon parcours de M1 MIAGE.
-                  Je m'intéresse à la conception et au développement d'applications web modernes, évolutives et utiles.
+                <motion.p variants={itemVariants} className="hero-description">
+                  {"Form\u00e9 en MIAGE, je con\u00e7ois des exp\u00e9riences web modernes \u2014 du frontend \u00e0 l\u2019architecture backend \u2014 avec une attention particuli\u00e8re \u00e0 la qualit\u00e9 et \u00e0 la performance."}
                 </motion.p>
 
-                {/* CTA Buttons */}
-                <motion.div
-                  variants={itemVariants}
-                  className="flex flex-col sm:flex-row items-start gap-4 mb-16"
-                >
+                <motion.div variants={itemVariants} className="hero-actions">
                   <Button
                     asAnchor
                     href="#projects"
                     variant="primary"
                     size="lg"
                     rightIcon={<ArrowRight className="w-5 h-5" />}
-                    className="group"
                   >
-                    Découvrir mes projets
-                    <motion.span
-                      className="inline-block transition-transform group-hover:translate-x-1"
-                    >
-                      →
-                    </motion.span>
+                    {"D\u00e9couvrir mes projets"}
                   </Button>
-                  <Button
-                    asAnchor
-                    href="#contact"
-                    variant="outline"
-                    size="lg"
-                    className="group"
-                  >
+                  <Button asAnchor href="#contact" variant="outline" size="lg">
                     Me contacter
-                    <motion.span
-                      className="inline-block transition-transform group-hover:translate-x-1"
-                    >
-                      <Send className="w-5 h-5" />
-                    </motion.span>
                   </Button>
                 </motion.div>
 
-                {/* Social Links */}
-                <motion.div
+                <motion.nav
                   variants={itemVariants}
-                  className="flex items-center gap-6"
-                  role="list"
-                  aria-label="Réseaux sociaux"
+                  className="hero-socials"
+                  aria-label={"R\u00e9seaux sociaux"}
                 >
-                  <a
-                    href={profile.social.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-accent-primary)] hover:bg-[var(--color-bg-hover)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-                    aria-label="GitHub"
-                  >
-                    <GitHubIcon className="w-6 h-6 transition-transform group-hover:scale-110" aria-hidden="true" />
+                  <a href={profile.social.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <GitHubIcon className="w-5 h-5" aria-hidden="true" />
                     <span className="sr-only">GitHub</span>
                   </a>
-                  <a
-                    href={profile.social.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-info)] hover:bg-[var(--color-bg-hover)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-                    aria-label="LinkedIn"
-                  >
-                    <LinkedInIcon className="w-6 h-6 transition-transform group-hover:scale-110" aria-hidden="true" />
+                  <a href={profile.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                    <LinkedInIcon className="w-5 h-5" aria-hidden="true" />
                     <span className="sr-only">LinkedIn</span>
                   </a>
-                  <a
-                    href={profile.social.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-accent-tertiary)] hover:bg-[var(--color-bg-hover)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-                    aria-label="Twitter"
-                  >
-                    <TwitterIcon className="w-6 h-6 transition-transform group-hover:scale-110" aria-hidden="true" />
+                  <a href={profile.social.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+                    <TwitterIcon className="w-5 h-5" aria-hidden="true" />
                     <span className="sr-only">Twitter</span>
                   </a>
-                  <a
-                    href={profile.social.email}
-                    className="group flex items-center justify-center w-12 h-12 rounded-sm text-[var(--color-text-muted)] hover:text-[var(--color-warning)] hover:bg-[var(--color-bg-hover)] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
-                    aria-label="Email"
-                  >
-                    <Mail className="w-6 h-6 transition-transform group-hover:scale-110" aria-hidden="true" />
+                  <a href={profile.social.email} aria-label="Email">
+                    <Mail className="w-5 h-5" aria-hidden="true" />
                     <span className="sr-only">Email</span>
                   </a>
-                </motion.div>
+                </motion.nav>
               </motion.div>
 
-              {/* Hero Illustration - Right Side */}
-              <motion.div
-                className="hidden lg:flex lg:flex-1 lg:max-w-[500px] lg:max-h-[500px] relative"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1.2, delay: 0.4, ease: [0.4, 0, 0.2, 1] as const }}
+              <motion.figure
+                className="hero-visual"
+                initial={reducedMotion ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.48, delay: reducedMotion ? 0 : 0.12, ease: [0.22, 1, 0.36, 1] }}
+                role="img"
+                aria-label={"Sch\u00e9ma de d\u00e9veloppement full stack : interface React et TypeScript, services Spring et Node.js, donn\u00e9es PostgreSQL."}
               >
-                <div className="relative">
-                  <HeroIllustration size={480} />
-                  {/* Floating tech badges around illustration */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    {[
-                      { label: "React", top: "10%", left: "5%", color: "#61DAFB" },
-                      { label: "TypeScript", top: "20%", right: "5%", color: "#3178C6" },
-                      { label: "Node.js", bottom: "20%", left: "5%", color: "#339933" },
-                      { label: "PostgreSQL", bottom: "10%", right: "5%", color: "#4169E1" },
-                      { label: "Spring Boot", top: "50%", right: "-5%", color: "#6DB33F" },
-                      { label: "Docker", bottom: "40%", right: "-5%", color: "#2496ED" },
-                    ].map((tech, i) => (
-                      <motion.span
-                        key={tech.label}
-                        variants={iconVariants}
-                        initial="hidden"
-                        animate="visible"
-                        transition={{ delay: 0.8 + i * 0.1, duration: 0.5 }}
-                        className="absolute px-3 py-1.5 text-xs font-medium rounded-full border backdrop-blur-sm transition-all hover:scale-105"
-                        style={{
-                          top: tech.top,
-                          bottom: tech.bottom,
-                          left: tech.left,
-                          right: tech.right,
-                          background: `${tech.color}15`,
-                          borderColor: `${tech.color}40`,
-                          color: tech.color,
-                        }}
-                      >
-                        {tech.label}
-                      </motion.span>
-                    ))}
+                <div className="architecture-card" aria-hidden="true">
+                  <div className="architecture-heading">
+                    <span>{"De l\u2019id\u00e9e au produit"}</span>
+                    <span className="architecture-status">Full stack</span>
+                  </div>
+                  <div className="architecture-flow">
+                    <div className="architecture-node">
+                      <small>01 / Interface</small>
+                      <strong>{"Exp\u00e9rience"}</strong>
+                      <span>{"React \u00b7 TypeScript"}</span>
+                    </div>
+                    <span className="architecture-arrow" aria-hidden="true">{"\u2192"}</span>
+                    <div className="architecture-node">
+                      <small>02 / Services</small>
+                      <strong>Logique</strong>
+                      <span>{"Spring \u00b7 Node.js"}</span>
+                    </div>
+                    <span className="architecture-arrow" aria-hidden="true">{"\u2192"}</span>
+                    <div className="architecture-node">
+                      <small>03 / {"Donn\u00e9es"}</small>
+                      <strong>Fondations</strong>
+                      <span>PostgreSQL</span>
+                    </div>
+                  </div>
+                  <div className="architecture-stack">
+                    <span>Concevoir</span>
+                    <span>Construire</span>
+                    <span>{"Am\u00e9liorer"}</span>
                   </div>
                 </div>
-              </motion.div>
+                <figcaption className="architecture-caption">
+                  {"Une approche compl\u00e8te : une interface claire, des services fiables et des donn\u00e9es bien structur\u00e9es."}
+                </figcaption>
+              </motion.figure>
             </div>
           </Container>
-
-          {/* Scroll indicator */}
-          <motion.div
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[var(--color-text-muted)] hidden lg:block"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2, duration: 0.8 }}
-          >
-            <span className="text-xs font-medium uppercase tracking-wider">Descendre</span>
-            <motion.svg
-              className="w-6 h-6"
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <path d="M12 5v14M19 12l-7 7-7-7" />
-            </motion.svg>
-          </motion.div>
         </Section>
-
         {/* Featured Projects Preview */}
-        <Section id="projects" size="md" background="secondary">
+        <Section id="featured-projects-preview" size="md" background="secondary">
           <Container size="xl" padding="md">
             <ScrollReveal variant="fadeInUp" delay={100}>
-              <header className="mb-12 text-center max-w-2xl mx-auto">
-                <Badge variant="accent" size="sm" className="mb-4">
+              <header className="section-heading mb-12 text-center max-w-2xl mx-auto">
+                <Badge variant="accent" size="sm" className="section-eyebrow mb-4">
                   <span className="w-4 h-4 mr-1" aria-hidden="true">💻</span>
                   Projets phares
                 </Badge>
-                <h2 className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
+                <h2 className="section-title font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
                   Projets sélectionnés
                 </h2>
                 <p className="text-[var(--color-text-secondary)] text-lg">
@@ -462,10 +322,14 @@ function App() {
             <ScrollReveal variant="fadeInUp" delay={200}>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {featuredProjects.map((project) => (
-                  <Card key={project.slug} variant="interactive" padding="md" className="flex flex-col h-full">
+                  <Card key={project.slug} variant="interactive" padding="md" className="portfolio-project-card flex flex-col h-full">
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="min-w-0 flex-1">
-                      <h3 className="font-semibold text-[var(--color-text-primary)] truncate">{project.name}</h3>
+                      <h3 className="font-semibold text-[var(--color-text-primary)] truncate">
+                        <Link to={`/projects/${project.slug}`} className="hover:text-[var(--color-accent-primary)] transition-colors">
+                          {project.name}
+                        </Link>
+                      </h3>
                       <p className="text-sm text-[var(--color-text-muted)] mt-0.5 truncate">{project.tagline}</p>
                     </div>
                     <Badge variant={project.status === "completed" ? "success" : project.status === "in-progress" ? "accent" : "warning"} size="sm">
@@ -513,15 +377,15 @@ function App() {
         </Section>
 
         {/* Skills Preview */}
-        <Section id="skills" size="md" background="none">
+        <Section id="skills-preview" size="md" background="none">
           <Container size="xl" padding="md">
             <ScrollReveal variant="fadeInUp" delay={100}>
-              <header className="mb-12 text-center max-w-2xl mx-auto">
-                <Badge variant="accent" size="sm" className="mb-4">
+              <header className="section-heading mb-12 text-center max-w-2xl mx-auto">
+                <Badge variant="accent" size="sm" className="section-eyebrow mb-4">
                   <span className="w-4 h-4 mr-1" aria-hidden="true">⚡</span>
                   Stack technique
                 </Badge>
-                <h2 className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
+                <h2 className="section-title font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
                 Technologies maîtrisées
               </h2>
               <p className="text-[var(--color-text-secondary)] text-lg">
@@ -545,15 +409,15 @@ function App() {
         </Section>
 
         {/* CTA Section */}
-        <Section size="md" background="gradient" className="relative">
+        <Section size="md" background="gradient" className="portfolio-cta relative">
           <Container size="xl" padding="md" center={true}>
             <ScrollReveal variant="fadeInUp" delay={100}>
-              <div className="max-w-2xl text-center">
+              <div className="section-heading max-w-2xl text-center">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6">
                   <span className="w-4 h-4" aria-hidden="true">✨</span>
                   <span className="font-medium">Open to opportunities</span>
                 </div>
-                <h2 className="font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
+                <h2 className="section-title font-display font-bold text-[var(--color-text-primary)] tracking-tight mb-4">
                   Disponible pour de nouveaux défis
                 </h2>
                 <p className="text-[var(--color-text-secondary)] text-lg mb-8">
@@ -589,8 +453,7 @@ function App() {
         <Suspense fallback={<SectionSkeleton />}>
           <ContactSection />
         </Suspense>
-      </motion.main>
-      </AnimatePresence>
+      </main>
 
       {/* Back to Top Button */}
       <AnimatePresence>
@@ -600,7 +463,7 @@ function App() {
             initial="hidden"
             animate="visible"
             exit="hidden"
-            className="fixed bottom-8 right-8 z-[999] p-4 rounded-full bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)] text-[var(--color-text-primary)] shadow-[var(--shadow-lg)] hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-accent-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
+            className="back-to-top fixed bottom-8 right-8 z-[999] p-4 rounded-full bg-[var(--color-bg-tertiary)] border border-[var(--color-border-primary)] text-[var(--color-text-primary)] shadow-[var(--shadow-lg)] hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-accent-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-border-focus)]"
             aria-label="Retour en haut"
             onClick={scrollToTop}
           >
@@ -613,7 +476,52 @@ function App() {
       <Footer
         copyright={`© ${new Date().getFullYear()} ${profile.name}. Tous droits réservés.`}
         showThemeToggle={true}
+        className="site-footer"
       />
+    </>
+  );
+}
+
+function App() {
+  const location = useLocation();
+  const reducedMotion = useReducedMotion();
+  const previousPath = useRef(location.pathname);
+
+  useEffect(() => {
+    if (previousPath.current !== location.pathname && !location.hash) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+    previousPath.current = location.pathname;
+  }, [location.pathname, location.hash]);
+
+  return (
+    <>
+      <a href="#main-content" className="skip-link">
+        Aller au contenu principal
+      </a>
+      <AnimatePresence mode={reducedMotion ? "sync" : "wait"} initial={false}>
+        <motion.div
+          key={location.pathname}
+          className="min-h-screen"
+          variants={pageVariants}
+          initial={reducedMotion ? false : "initial"}
+          animate={reducedMotion ? undefined : "animate"}
+          exit={reducedMotion ? undefined : "exit"}
+        >
+          <Routes location={location}>
+            <Route path="/" element={<PortfolioHome />} />
+            <Route
+              path="/projects/:slug"
+              element={
+                <Suspense fallback={<SectionSkeleton />}>
+                  <ProjectDetailPage />
+                </Suspense>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </motion.div>
+      </AnimatePresence>
     </>
   );
 }

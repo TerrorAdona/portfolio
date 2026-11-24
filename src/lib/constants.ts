@@ -204,6 +204,7 @@ export const skillCategories = [
   "devops",
   "tools",
   "soft",
+  "testing",
 ] as const;
 
 export type SkillCategory = (typeof skillCategories)[number];

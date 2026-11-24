@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "skills": {
+    "oil-ui": {
+      "source": "oil-oil/oil-ui",
+      "commit": "f35b813a422db17bf39c74c14d1e9ac32e7cd29b",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "867f01abec8a2cc90d0dc36739054228b233012e55b231d6003ee9a76fac6615"
+    },
+    "ui-skills-root": {
+      "source": "ibelick/ui-skills",
+      "commit": "7ef0076fce1dfa39dd2bc43b7dc13add6eda8a41",
+      "sourceType": "github",
+      "skillPath": "skills/ui-skills-root/SKILL.md",
+      "computedHash": "1eb4241459d13315bb10930554de1ad20bf74568bd5d0f10f4cc0edee1b72439"
+    }
+  }
+}

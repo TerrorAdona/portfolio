@@ -6,7 +6,7 @@ import { Badge } from "../components/ui/Badge";
 import { profile } from "../data/profile";
 import { education, certifications } from "../data/education";
 import { formatDateRange, formatMonthYear } from "../lib/utils";
-import { CodeIcon, DatabaseIcon, CloudIcon, AwardIcon, SparklesIcon, ZapIcon, GraduationCapIcon, CalendarIcon, MapPinIcon, BriefcaseIcon, GlobeIcon } from "../components/ui/BrandIcons";
+import { CodeIcon, DatabaseIcon, AwardIcon, SparklesIcon, ZapIcon, GraduationCapIcon, CalendarIcon, MapPinIcon, BriefcaseIcon, GlobeIcon, CloudIcon } from "../components/ui/BrandIcons";
 
 /**
  * About Section - Editorial layout with personal story, education, certifications
@@ -51,15 +51,14 @@ const cardVariants = {
 
 const iconVariants = {
   hidden: { opacity: 0, scale: 0.8 },
-  visible: (i: number) => ({
+  visible: {
     opacity: 1,
     scale: 1,
     transition: {
-      delay: i * 0.1,
       duration: 0.4,
       ease: [0.34, 1.56, 0.64, 1] as const,
     },
-  }),
+  },
 };
 
 function AboutSection() {
@@ -75,11 +74,11 @@ function AboutSection() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="mb-16 max-w-3xl mx-auto text-center"
+          className="section-heading mb-16 max-w-3xl mx-auto text-center"
         >
           <motion.div
             variants={itemVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6"
+            className="section-eyebrow inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6"
           >
             <CodeIcon className="w-4 h-4" aria-hidden="true" />
             <span className="font-medium">À propos</span>
@@ -184,7 +183,8 @@ function AboutSection() {
                 {interests.map((interest, i) => (
                   <motion.li
                     key={interest}
-                    variants={iconVariants(i)}
+                    custom={i}
+                    variants={iconVariants}
                     className="flex items-center gap-3 p-3 bg-[var(--color-bg-tertiary)] rounded-lg border border-[var(--color-border-primary)] transition-all hover:border-[var(--color-border-secondary)] hover:shadow-[var(--shadow-sm)]"
                   >
                     <span className="flex-shrink-0 w-2 h-2 rounded-full bg-[var(--color-accent-primary)]" aria-hidden="true" />
@@ -352,7 +352,7 @@ function AboutSection() {
               className="mb-6 flex items-center gap-3"
             >
               <div className="flex items-center justify-center w-10 h-10 rounded-md bg-[var(--color-bg-tertiary)] text-[var(--color-accent-primary)]">
-                <GraduationCap className="w-5 h-5" aria-hidden="true" />
+                <GraduationCapIcon className="w-5 h-5" aria-hidden="true" />
               </div>
               <motion.h3
                 id="education-title"
@@ -381,7 +381,7 @@ function AboutSection() {
                       <p className="text-sm text-[var(--color-text-secondary)]">{edu.field}</p>
                     </div>
                     <div className="flex items-center gap-1 text-xs text-[var(--color-text-muted)] flex-shrink-0">
-                      <Calendar className="w-3 h-3" aria-hidden="true" />
+                      <CalendarIcon className="w-3 h-3" aria-hidden="true" />
                       <span>{formatDateRange(edu.startDate, edu.endDate, edu.current)}</span>
                     </div>
                   </header>
@@ -450,7 +450,7 @@ function AboutSection() {
                       <p className="text-sm text-[var(--color-text-secondary)]">{cert.issuer}</p>
                     </div>
                     <div className="flex items-center gap-1 text-xs text-[var(--color-text-muted)] flex-shrink-0">
-                      <Calendar className="w-3 h-3" aria-hidden="true" />
+                      <CalendarIcon className="w-3 h-3" aria-hidden="true" />
                       <span>{formatMonthYear(cert.date)}</span>
                     </div>
                   </header>

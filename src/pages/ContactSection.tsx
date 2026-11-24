@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Send } from "lucide-react";
 import { Section } from "../components/layout/Section";
 import { Container } from "../components/layout/Container";
 import { Card } from "../components/ui/Card";
@@ -9,7 +10,7 @@ import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Textarea } from "../components/ui/Input";
 import { profile } from "../data/profile";
-import { Mail, GitHubIcon, LinkedInIcon, TwitterIcon, Send, CheckCircleIcon, AlertCircleIcon, Loader2, ShieldIcon, SparklesIcon } from "../components/ui/BrandIcons";
+import { Mail, GitHubIcon, LinkedInIcon, TwitterIcon, CheckCircleIcon, AlertCircleIcon, Loader2Icon, ShieldIcon, SparklesIcon } from "../components/ui/BrandIcons";
 import { formatDateRange } from "../lib/utils";
 
 /**
@@ -208,11 +209,11 @@ export function ContactSection() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="mb-12 max-w-3xl mx-auto text-center"
+          className="section-heading mb-12 max-w-3xl mx-auto text-center"
         >
           <motion.div
             variants={itemVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6"
+            className="section-eyebrow inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6"
           >
             <SparklesIcon className="w-4 h-4" aria-hidden="true" />
             <span className="font-medium">Contact</span>
@@ -328,7 +329,7 @@ export function ContactSection() {
                   variant="primary"
                   size="lg"
                   loading={isSubmitting}
-                  rightIcon={isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                  rightIcon={isSubmitting ? <Loader2Icon className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   disabled={isSubmitting}
                   className="w-full sm:w-auto"
                 >

@@ -1,4 +1,4 @@
-import { forwardRef, type InputHTMLAttributes, type TextareaHTMLAttributes, type SelectHTMLAttributes } from "react";
+import { forwardRef, type InputHTMLAttributes, type TextareaHTMLAttributes, type SelectHTMLAttributes, type HTMLAttributes } from "react";
 import { cn } from "../../lib/utils";
 
 /**
@@ -303,6 +303,8 @@ Select.displayName = "Select";
  */
 export interface LabelProps extends HTMLAttributes<HTMLLabelElement> {
   required?: boolean;
+  children?: React.ReactNode;
+  className?: string;
 }
 
 export const Label = forwardRef<HTMLLabelElement, LabelProps>(

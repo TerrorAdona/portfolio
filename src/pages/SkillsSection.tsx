@@ -3,7 +3,8 @@ import { Section } from "../components/layout/Section";
 import { Container } from "../components/layout/Container";
 import { Card } from "../components/ui/Card";
 import { Badge } from "../components/ui/Badge";
-import { skills, skillCategories, getSkillsByCategory, getSkillsByCategoryAndStatus, STATUS_LABELS, SkillStatus } from "../data/skills";
+import { skills, skillCategories, getSkillsByCategory, getSkillsByCategoryAndStatus, SkillStatus } from "../data/skills";
+import { STATUS_LABELS } from "../types/skill";
 import { CodeIcon, DatabaseIcon, CloudIcon, AwardIcon, SparklesIcon, ZapIcon, ServerIcon, CpuIcon, HardDriveIcon, LayersIcon, TerminalIcon, TestTubeIcon, WrenchIcon, ShieldIcon, BrainIcon, UsersIcon, GlobeIcon } from "../components/ui/BrandIcons";
 
 /**
@@ -34,9 +35,9 @@ const categoryVariants = {
   },
 };
 
-const skillVariants = {
+const skillVariants = (i: number) => ({
   hidden: { opacity: 0, y: 20, scale: 0.95 },
-  visible: (i: number) => ({
+  visible: {
     opacity: 1,
     y: 0,
     scale: 1,
@@ -45,8 +46,8 @@ const skillVariants = {
       duration: 0.4,
       ease: [0.34, 1.56, 0.64, 1] as const,
     },
-  }),
-};
+  },
+});
 
 const legendVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -67,7 +68,7 @@ const categoryIcons: Record<string, React.ComponentType<any>> = {
   soft: UsersIcon,
 };
 
-function SkillCard({ skill, index, onClick }: { skill: typeof skills[0]; index: number; onClick?: () => void }) {
+function SkillCard({ skill, index }: { skill: typeof skills[0]; index: number }) {
   const statusConfig = STATUS_LABELS[skill.status];
 
   return (
@@ -75,11 +76,7 @@ function SkillCard({ skill, index, onClick }: { skill: typeof skills[0]; index: 
       variants={skillVariants(index)}
       initial="hidden"
       animate="visible"
-      className="group relative p-5 bg-[var(--color-bg-tertiary)] rounded-xl border border-[var(--color-border-primary)] transition-all duration-300 hover:border-[var(--color-border-secondary)] hover:shadow-[var(--shadow-md)] hover:-translate-y-1 cursor-pointer"
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.(); } }}
+      className="portfolio-skill-card group relative p-5 bg-[var(--color-bg-tertiary)] rounded-xl border border-[var(--color-border-primary)] transition-[border-color,box-shadow] duration-200"
     >
       {/* Status indicator bar */}
       <div
@@ -310,11 +307,11 @@ export function SkillsSection() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="mb-12 max-w-3xl mx-auto text-center"
+          className="section-heading mb-12 max-w-3xl mx-auto text-center"
         >
           <motion.div
             variants={categoryVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6"
+            className="section-eyebrow inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6"
           >
             <SparklesIcon className="w-4 h-4" aria-hidden="true" />
             <span className="font-medium">Compétences techniques</span>
@@ -345,7 +342,7 @@ export function SkillsSection() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="space-y-16"
+          className="portfolio-skills-grid space-y-16"
         >
           {skillCategories.map((category, index) => (
             <SkillCategory key={category.key} category={category} index={index} />

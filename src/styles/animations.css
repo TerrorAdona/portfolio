@@ -246,6 +246,42 @@
       box-shadow: var(--shadow-focus);
     }
   }
+
+  .motion-interactive {
+    transition:
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 120ms ease,
+      background-color 120ms ease,
+      border-color 120ms ease,
+      box-shadow 120ms ease;
+  }
+
+  .motion-card {
+    transition:
+      transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .motion-interactive:hover:not(:disabled):not([aria-disabled="true"]) {
+      transform: translateY(-1px) scale(1.015);
+    }
+
+    .motion-card:hover {
+      transform: translateY(-4px);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .motion-interactive:active:not(:disabled):not([aria-disabled="true"]) {
+      transform: scale(0.985);
+    }
+
+    .motion-card:active {
+      transform: scale(0.995);
+    }
+  }
 }
 
 /* ============================================================
@@ -277,5 +313,24 @@
       animation: none !important;
       transition: none !important;
     }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .motion-interactive {
+    transform: none !important;
+  }
+
+  .motion-card {
+    transform: none !important;
   }
 }

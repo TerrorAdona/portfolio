@@ -64,7 +64,6 @@ export {
   Check,
   XCircle,
   HelpCircle,
-  InfoCircle,
 } from "lucide-react";
 
 // Code & Development

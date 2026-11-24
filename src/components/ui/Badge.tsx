@@ -1,4 +1,4 @@
-import { forwardRef, type HTMLAttributes } from "react";
+import { forwardRef, type HTMLAttributes, type useState, type useRef } from "react";
 import { cn } from "../../lib/utils";
 
 /**
@@ -174,9 +174,9 @@ export function TagInput({
   helperText,
   error,
 }: TagInputProps) {
-  const [inputValue, setInputValue] = React.useState("");
-  const [showSuggestions, setShowSuggestions] = React.useState(false);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const filteredSuggestions = allowedTags.filter(
     (tag) =>

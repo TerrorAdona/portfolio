@@ -4,7 +4,7 @@
  * Respects prefers-reduced-motion
  */
 
-import { Variants } from "framer-motion";
+import { type Variants } from "framer-motion";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 
 /**
@@ -20,10 +20,10 @@ export function getReducedMotion(): boolean {
  */
 export function createSafeVariants<T extends Variants>(
   variants: T,
-  reducedVariants: T = {}
+  reducedVariants?: T
 ): T {
   if (getReducedMotion()) {
-    return reducedVariants as T;
+    return (reducedVariants ?? {}) as T;
   }
   return variants;
 }
@@ -338,9 +338,12 @@ export const ghostButtonVariants: Variants = {
  */
 export const spinnerVariants: Variants = {
   initial: { opacity: 0, rotate: 0 },
-  animate: { opacity: 1, rotate: 360 },
-  exit: { opacity: 0, rotate: -180 },
-  transition: { duration: 0.6, ease: "linear" },
+  animate: {
+    opacity: 1,
+    rotate: 360,
+    transition: { duration: 0.6, ease: "linear", repeat: Infinity },
+  },
+  exit: { opacity: 0, rotate: -180, transition: { duration: 0.2 } },
 };
 
 // ============================================================
@@ -351,10 +354,17 @@ export const spinnerVariants: Variants = {
  * Page fade in/out
  */
 export const pageVariants: Variants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
-  transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const },
+  initial: { opacity: 0, y: 10 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] as const },
+  },
+  exit: {
+    opacity: 0,
+    y: -6,
+    transition: { duration: 0.18, ease: [0.4, 0, 1, 1] as const },
+  },
 };
 
 /**
@@ -362,9 +372,16 @@ export const pageVariants: Variants = {
  */
 export const slidePageVariants: Variants = {
   initial: { opacity: 0, x: 50 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -50 },
-  transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] as const },
+  animate: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] as const },
+  },
+  exit: {
+    opacity: 0,
+    x: -50,
+    transition: { duration: 0.3, ease: [0.4, 0, 1, 1] as const },
+  },
 };
 
 /**
@@ -444,7 +461,6 @@ export const mobileMenuVariants: Variants = {
   closed: {
     opacity: 0,
     height: 0,
-    opacity: 0,
     transition: { duration: 0.3, ease: "easeInOut" },
   },
   open: {

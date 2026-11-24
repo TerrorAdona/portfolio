@@ -1,35 +1,46 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 /**
  * Hook for scroll spy / active section detection
  */
 
+const defaultScrollSpyThreshold = [0, 0.1, 0.5, 1];
+
 export function useScrollSpy(sectionIds: string[], options?: IntersectionObserverInit): string {
   const [activeSection, setActiveSection] = useState<string>("");
-
-  const observerOptions: IntersectionObserverInit = {
-    root: null,
-    rootMargin: "-20% 0px -60% 0px", // Trigger when section is in middle of viewport
-    threshold: [0, 0.1, 0.5, 1],
-    ...options,
-  };
+  const rootMargin = options?.rootMargin ?? "-20% 0px -60% 0px";
+  const threshold = options?.threshold ?? defaultScrollSpyThreshold;
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
+          setActiveSection((current) => current === entry.target.id ? current : entry.target.id);
         }
       });
-    }, observerOptions);
+    }, { root: null, rootMargin, threshold });
 
-    sectionIds.forEach((id) => {
-      const element = document.getElementById(id);
-      if (element) observer.observe(element);
-    });
+    const observedElements = new Set<Element>();
+    const observeAvailableSections = () => {
+      sectionIds.forEach((id) => {
+        const element = document.getElementById(id);
+        if (element && !observedElements.has(element)) {
+          observer.observe(element);
+          observedElements.add(element);
+        }
+      });
+    };
 
-    return () => observer.disconnect();
-  }, [sectionIds, observerOptions.rootMargin, observerOptions.threshold]);
+    observeAvailableSections();
+    // Sections may be rendered later by React.lazy/Suspense.
+    const mutationObserver = new MutationObserver(observeAvailableSections);
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      mutationObserver.disconnect();
+      observer.disconnect();
+    };
+  }, [sectionIds, rootMargin, threshold]);
 
   return activeSection;
 }

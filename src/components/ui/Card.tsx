@@ -28,7 +28,7 @@ const variantStyles = {
   glass:
     "bg-[var(--glass-bg)] backdrop-blur-[20px] border border-[var(--glass-border)] shadow-[var(--shadow-xl)]",
   interactive:
-    "bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-glow-md)] hover:border-[var(--color-border-secondary)] hover:-translate-y-1",
+    "bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-glow-md)] hover:border-[var(--color-border-secondary)]",
 } as const;
 
 const paddingStyles = {
@@ -64,17 +64,20 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
     },
     ref
   ) => {
-    const isInteractive = variant === "interactive" || !!onClick;
+    const isInteractive = !!onClick;
 
     return (
       <div
         ref={ref}
         className={cn(
-          "overflow-hidden transition-all duration-200 ease-out",
+          "portfolio-card overflow-hidden transition-[border-color,box-shadow] duration-200 ease-out",
+          variant === "glass" && "portfolio-card--glass",
+          variant === "elevated" && "portfolio-card--elevated",
+          (hoverable || isInteractive || variant === "interactive") && "motion-card",
           variantStyles[variant],
           paddingStyles[padding],
           radiusStyles[radius],
-          hoverable && "hover:-translate-y-1 hover:shadow-[var(--shadow-md)]",
+          hoverable && "hover:shadow-[var(--shadow-md)]",
           isInteractive && "cursor-pointer",
           className
         )}
@@ -98,6 +101,15 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 );
 
 Card.displayName = "Card";
+
+/**
+ * Compound component types
+ */
+export type CardCompound = typeof Card & {
+  Header: typeof CardHeader;
+  Content: typeof CardContent;
+  Footer: typeof CardFooter;
+};
 
 /**
  * Card Header
@@ -209,6 +221,9 @@ CardFooter.displayName = "CardFooter";
 /**
  * Compound component
  */
-Card.Header = CardHeader;
-Card.Content = CardContent;
-Card.Footer = CardFooter;
+const CardCompound = Card as CardCompound;
+CardCompound.Header = CardHeader;
+CardCompound.Content = CardContent;
+CardCompound.Footer = CardFooter;
+
+export default CardCompound;

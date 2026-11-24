@@ -87,6 +87,30 @@ export function isInViewport(element: HTMLElement, offset = 0): boolean {
 }
 
 /**
+ * Format month and year for display
+ */
+export function formatMonthYear(dateStr: string): string {
+  const [year, month] = dateStr.split("-");
+  const months = ["janv.", "févr.", "mars", "avr.", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."];
+  return `${months[parseInt(month) - 1]} ${year}`;
+}
+
+/**
+ * Format date range for display
+ */
+export function formatDateRange(start: string, end?: string, current?: boolean): string {
+  const startFormatted = formatMonthYear(start);
+
+  if (current) return `${startFormatted} — Aujourd'hui`;
+  if (!end) return startFormatted;
+
+  const [endYear, endMonth] = end.split("-");
+  const endFormatted = formatMonthYear(end);
+
+  return `${startFormatted} — ${endFormatted}`;
+}
+
+/**
  * Generate unique ID
  */
 export function generateId(prefix = "id"): string {

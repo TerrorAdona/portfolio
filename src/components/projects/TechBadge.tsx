@@ -1,12 +1,12 @@
-import { type ReactNode } from "react";
+import { type ReactNode, type CSSProperties } from "react";
 import { cn } from "../../lib/utils";
-import { Badge } from "../ui/Badge";
+import { Badge, type BadgeProps } from "../ui/Badge";
 
 /**
  * TechBadge component - specialized badge for technology tags
  */
 
-export interface TechBadgeProps {
+export interface TechBadgeProps extends Omit<BadgeProps, "variant" | "size" | "onClick" | "children" | "className"> {
   /** Technology name */
   name: string;
   /** Category */
@@ -23,6 +23,8 @@ export interface TechBadgeProps {
   href?: string;
   /** External link */
   external?: boolean;
+  /** Custom style */
+  style?: CSSProperties;
   /** ClassName */
   className?: string;
 }
@@ -92,9 +94,10 @@ export function TechBadge({
     }
   };
 
+  const isInteractive = onClick || href;
+
   return (
     <Badge
-      as={BadgeComponent}
       variant={config.variant}
       size={size}
       onClick={onClick}
@@ -105,8 +108,8 @@ export function TechBadge({
         className
       )}
       onKeyDown={handleKeyDown}
-      role={onClick || href ? "button" : undefined}
-      tabIndex={onClick || href ? 0 : undefined}
+      role={isInteractive ? "button" : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
     >
       {showCategoryIcon && icon ? (
         <span aria-hidden="true">{icon}</span>
@@ -169,7 +172,7 @@ export function TechBadgeCloud({
           href={tech.href}
           style={{
             animationDelay: `${index * 30}ms`,
-          } as React.CSSProperties}
+          } as CSSProperties}
         />
       ))}
     </div>
@@ -259,7 +262,6 @@ export function TechStackCategories({
                   size={size}
                   showCategoryIcon={false}
                   href={tech.href}
-                  className={showLevel && tech.level ? "relative" : undefined}
                 >
                   {tech.name}
                   {showLevel && tech.level && (

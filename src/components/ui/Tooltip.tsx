@@ -1,4 +1,4 @@
-import { forwardRef, useState, useRef, useEffect, type HTMLAttributes, type ReactNode } from "react";
+import { useState, useRef, useEffect, type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "../../lib/utils";
 
 /**
@@ -107,19 +107,19 @@ export function Tooltip({
 
   const enhancedChild = React.cloneElement(child, {
     ref: triggerRef,
-    onMouseEnter: (e: React.MouseEvent) => {
+    onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
       childProps.onMouseEnter?.(e);
       handleMouseEnter();
     },
-    onMouseLeave: (e: React.MouseEvent) => {
+    onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
       childProps.onMouseLeave?.(e);
       handleMouseLeave();
     },
-    onFocus: (e: React.FocusEvent) => {
+    onFocus: (e: React.FocusEvent<HTMLElement>) => {
       childProps.onFocus?.(e);
       handleFocus();
     },
-    onBlur: (e: React.FocusEvent) => {
+    onBlur: (e: React.FocusEvent<HTMLElement>) => {
       childProps.onBlur?.(e);
       handleBlur();
     },

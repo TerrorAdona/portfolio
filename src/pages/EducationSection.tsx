@@ -330,7 +330,23 @@ export function EducationSection() {
       description: edu.description,
       technologies: undefined,
       achievements: edu.achievements,
-      links: edu.repository ? [{ label: "Repository", href: edu.repository, icon: <span>📁</span>, external: true }] : undefined,
+      children: (
+        <>
+          {edu.repository && (
+            <Button
+              asAnchor
+              href={edu.repository}
+              variant="ghost"
+              size="sm"
+              external
+              leftIcon={<span>📁</span>}
+              className="transition-colors"
+            >
+              Repository
+            </Button>
+          )}
+        </>
+      ),
     })),
     ...academicProjects.map((proj, i) => ({
       type: "project" as TimelineType,
@@ -386,11 +402,11 @@ export function EducationSection() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="mb-12 max-w-3xl mx-auto text-center"
+          className="section-heading mb-12 max-w-3xl mx-auto text-center"
         >
           <motion.div
             variants={itemVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6"
+            className="section-eyebrow inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-accent-primary)]/15 text-[var(--color-accent-primary)] border border-[var(--color-accent-primary)]/30 mb-6"
           >
             <SparklesIcon className="w-4 h-4" aria-hidden="true" />
             <span className="font-medium">Parcours & Formation</span>

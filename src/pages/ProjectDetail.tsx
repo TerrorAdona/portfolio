@@ -1,56 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { ArrowRight, Calendar, Users } from "lucide-react";
 import { Section } from "../components/layout/Section";
 import { Container } from "../components/layout/Container";
-import { Card } from "../components/ui/Card";
 import { Badge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button";
-import { Separator } from "../components/ui/Separator";
-import { projects, getProjectBySlug } from "../data/projects";
-import { ExternalLink, ArrowRight, ArrowLeft, GitHubIcon, CodeIcon, DatabaseIcon, CloudIcon, ServerIcon, WrenchIcon, TestTubeIcon, ShieldIcon, ZapIcon, AwardIcon, SparklesIcon, Calendar, MapPin, Clock, Users, GlobeIcon } from "../components/ui/BrandIcons";
+import { getProjectBySlug } from "../data/projects";
+import { ExternalLink, GitHubIcon, CodeIcon, DatabaseIcon, ServerIcon, WrenchIcon, TestTubeIcon, ShieldIcon, ZapIcon, AwardIcon, SparklesIcon, GlobeIcon } from "../components/ui/BrandIcons";
 import { formatDateRange } from "../lib/utils";
-import { cn } from "../lib/utils";
 
 /**
  * Project Detail Page - Structured presentation of a single project
  */
-
-const animationVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.4, 0, 0.2, 1] as const,
-    },
-  },
-};
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: [0.4, 0, 0.2, 1] as const,
-    },
-  },
-};
 
 const categoryIcons: Record<string, React.ComponentType<any>> = {
   backend: ServerIcon,
@@ -192,7 +155,7 @@ function TechStackGrid({ techStack, title }: { techStack: Array<{ name: string; 
   );
 }
 
-function MetaInfo({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
+function MetaInfo({ label, value, icon }: { label: string; value: React.ReactNode; icon: React.ReactNode }) {
   return (
     <div className="flex items-center gap-3 p-4 bg-[var(--color-bg-tertiary)] rounded-lg border border-[var(--color-border-primary)]">
       <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[var(--color-accent-primary)]/15 flex items-center justify-center text-[var(--color-accent-primary)]">
@@ -212,7 +175,7 @@ export function ProjectDetail() {
 
   if (!project) {
     return (
-      <Section size="lg" background="secondary">
+      <Section id="main-content" size="lg" background="secondary">
         <Container size="xl" padding="md">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -233,7 +196,7 @@ export function ProjectDetail() {
   return (
     <>
       {/* Breadcrumb / Header */}
-      <Section size="sm" background="gradient" className="relative">
+      <Section id="main-content" size="sm" background="gradient" className="relative">
         <Container size="xl" padding="md">
           <motion.nav
             initial={{ opacity: 0, y: -20 }}
@@ -241,9 +204,9 @@ export function ProjectDetail() {
             className="flex items-center gap-2 text-sm text-[var(--color-text-muted)] mb-4"
             aria-label="Fil d'Ariane"
           >
-            <a href="/" className="hover:text-[var(--color-text-primary)] transition-colors">Accueil</a>
+            <Link to="/" className="hover:text-[var(--color-text-primary)] transition-colors">Accueil</Link>
             <span aria-hidden="true">/</span>
-            <a href="#projects" className="hover:text-[var(--color-text-primary)] transition-colors">Projets</a>
+            <Link to="/#projects" className="hover:text-[var(--color-text-primary)] transition-colors">Projets</Link>
             <span aria-hidden="true">/</span>
             <span className="text-[var(--color-text-primary)] font-medium">{project.name}</span>
           </motion.nav>
@@ -646,9 +609,13 @@ export function ProjectDetail() {
             <p className="text-[var(--color-text-secondary)] text-lg mb-8">
               Explorez l'ensemble de mon portfolio technique
             </p>
-            <Button asAnchor href="#projects" variant="primary" size="lg" rightIcon={<ArrowRight className="w-5 h-5" />}>
+            <Link
+              to="/#projects"
+              className="inline-flex items-center justify-center gap-2 rounded-sm border border-transparent bg-[var(--color-accent-primary)] px-5 py-3 text-lg font-medium text-[var(--color-text-inverse)] transition-colors hover:bg-[var(--color-accent-primary)]/90 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-bg-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-border-focus)] motion-interactive"
+            >
               Voir tous les projets
-            </Button>
+              <ArrowRight className="w-5 h-5" aria-hidden="true" />
+            </Link>
           </motion.div>
         </Container>
       </Section>
