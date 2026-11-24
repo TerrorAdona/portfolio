@@ -180,7 +180,6 @@ function PortfolioHome() {
         showThemeToggle={true}
         fixed={true}
         transparent={true}
-        className="site-header"
       />
 
       {/* Main Content */}
