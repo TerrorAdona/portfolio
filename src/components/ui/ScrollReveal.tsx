@@ -1,8 +1,8 @@
 "use client";
 
 import { motion, HTMLMotionProps } from "framer-motion";
-import { useScrollReveal } from "../hooks/useScrollSpy";
-import { forwardRef } from "react";
+import { useScrollReveal } from "../../hooks/useScrollSpy";
+import { forwardRef, useRef } from "react";
 
 /**
  * ScrollReveal component - reveals content when it enters viewport
@@ -63,7 +63,11 @@ export const ScrollReveal = forwardRef<HTMLDivElement, ScrollRevealProps>(
     },
     ref
   ) => {
-    const isVisible = useScrollReveal(ref, {
+    // Create internal ref if none provided
+    const internalRef = useRef<HTMLDivElement>(null);
+    const mergedRef = ref ?? internalRef;
+
+    const isVisible = useScrollReveal(mergedRef, {
       rootMargin,
       threshold: 0.1,
     });

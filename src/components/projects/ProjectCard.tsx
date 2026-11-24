@@ -3,7 +3,7 @@ import { cn } from "../../lib/utils";
 import { Card } from "../ui/Card";
 import { Badge } from "../ui/Badge";
 import { Button } from "../ui/Button";
-import { GitHubIcon, ExternalLinkIcon, ArrowRightIcon } from "../ui/BrandIcons";
+import { GitHubIcon, ExternalLink, ArrowRightIcon } from "../ui/BrandIcons";
 
 /**
  * Project Card component
@@ -157,7 +157,7 @@ export function ProjectCard({
               variant="ghost"
               size="sm"
               external
-              rightIcon={<ExternalLinkIcon className="w-4 h-4" />}
+              rightIcon={<ExternalLink className="w-4 h-4" />}
               className="flex-1 justify-center"
             >
               Démo

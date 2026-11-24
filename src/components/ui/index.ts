@@ -16,3 +16,4 @@ export * from "./ScrollArea";
 export * from "./HeroIllustration";
 export * from "./BrandIcons";
 export * from "./ScrollReveal";
+export * from "./StructuredData";

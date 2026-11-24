@@ -9,7 +9,7 @@ import { Badge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button";
 import { ProjectCard, ProjectCardSkeleton } from "../components/projects/ProjectCard";
 import { projects, getFeaturedProjects, getProjectsByCategory, getAllTechnologies } from "../data/projects";
-import { CodeIcon, DatabaseIcon, CloudIcon, ServerIcon, CodeIcon, ExternalLink, Github, SparklesIcon, ZapIcon } from "../components/ui/BrandIcons";
+import { CodeIcon, DatabaseIcon, CloudIcon, ServerIcon, ExternalLink, GitHubIcon, SparklesIcon, ZapIcon } from "../components/ui/BrandIcons";
 import { cn } from "../lib/utils";
 
 /**
@@ -259,7 +259,7 @@ export function ProjectsSection() {
         >
           <div className="flex flex-wrap items-center justify-center gap-8 mb-6 text-sm text-[var(--color-text-secondary)]">
             <span className="flex items-center gap-1.5">
-              <Github className="w-4 h-4" aria-hidden="true" />
+              <GitHubIcon className="w-4 h-4" aria-hidden="true" />
               {projects.length} projets sur GitHub
             </span>
             <span className="flex items-center gap-1.5">

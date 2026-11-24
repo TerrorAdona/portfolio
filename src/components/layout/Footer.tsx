@@ -1,7 +1,8 @@
-import { type ReactNode } from "react";
+import React, { type ReactNode, type ReactElement } from "react";
 import { cn } from "../../lib/utils";
 import { Container } from "./Container";
-import { Github, Linkedin, Twitter, Mail, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
+import { GitHubIcon, LinkedInIcon, TwitterIcon, Mail } from "../ui/BrandIcons";
 
 /**
  * Footer component
@@ -30,9 +31,9 @@ export interface FooterProps {
 }
 
 const defaultSocialLinks = [
-  { label: "GitHub", href: "https://github.com/TerrorAdona", icon: <Github className="w-5 h-5" />, external: true },
-  { label: "LinkedIn", href: "https://linkedin.com/in/rakotoarinivo-herilala", icon: <Linkedin className="w-5 h-5" />, external: true },
-  { label: "Twitter", href: "https://twitter.com/TerrorAdona", icon: <Twitter className="w-5 h-5" />, external: true },
+  { label: "GitHub", href: "https://github.com/TerrorAdona", icon: <GitHubIcon className="w-5 h-5" />, external: true },
+  { label: "LinkedIn", href: "https://linkedin.com/in/rakotoarinivo-herilala", icon: <LinkedInIcon className="w-5 h-5" />, external: true },
+  { label: "Twitter", href: "https://twitter.com/TerrorAdona", icon: <TwitterIcon className="w-5 h-5" />, external: true },
   { label: "Email", href: "mailto:herilala.rakotoarinivo@gmail.com", icon: <Mail className="w-5 h-5" />, external: true },
 ];
 

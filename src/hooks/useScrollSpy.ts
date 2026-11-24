@@ -137,28 +137,45 @@ export function useScrollReveal(
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const element = elementRef.current;
-    if (!element) return;
+    // Wait for the ref to be attached to the DOM element
+    const checkElement = () => {
+      const element = elementRef.current;
+      if (!element) return false;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          // Optionally unobserve after first reveal
-          // observer.unobserve(element);
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            // Optionally unobserve after first reveal
+            // observer.unobserve(element);
+          }
+        },
+        {
+          root: null,
+          rootMargin: "0px 0px -10% 0px", // Trigger slightly before element enters viewport
+          threshold: 0.1,
+          ...options,
         }
-      },
-      {
-        root: null,
-        rootMargin: "0px 0px -10% 0px", // Trigger slightly before element enters viewport
-        threshold: 0.1,
-        ...options,
-      }
-    );
+      );
 
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [elementRef.current, options?.rootMargin, options?.threshold]);
+      observer.observe(element);
+      return () => observer.disconnect();
+    };
+
+    // Check immediately
+    if (!checkElement()) {
+      // If element not ready, wait for it to be attached
+      const checkInterval = setInterval(() => {
+        if (checkElement()) {
+          clearInterval(checkInterval);
+        }
+      }, 50);
+
+      return () => clearInterval(checkInterval);
+    }
+
+    return () => {};
+  }, [elementRef, options?.rootMargin, options?.threshold]);
 
   return isVisible;
 }

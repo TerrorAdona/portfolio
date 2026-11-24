@@ -9,7 +9,7 @@ import { Badge } from "../components/ui/Badge";
 import { Button } from "../components/ui/Button";
 import { Separator } from "../components/ui/Separator";
 import { projects, getProjectBySlug } from "../data/projects";
-import { ExternalLink, ArrowRight, ArrowLeft, Github, CodeIcon, DatabaseIcon, CloudIcon, ServerIcon, WrenchIcon, TestTubeIcon, ShieldIcon, ZapIcon, AwardIcon, SparklesIcon, Calendar, MapPin, Clock, Users, CodeIcon, DatabaseIcon, GlobeIcon } from "../components/ui/BrandIcons";
+import { ExternalLink, ArrowRight, ArrowLeft, GitHubIcon, CodeIcon, DatabaseIcon, CloudIcon, ServerIcon, WrenchIcon, TestTubeIcon, ShieldIcon, ZapIcon, AwardIcon, SparklesIcon, Calendar, MapPin, Clock, Users, GlobeIcon } from "../components/ui/BrandIcons";
 import { formatDateRange } from "../lib/utils";
 import { cn } from "../lib/utils";
 
@@ -293,7 +293,7 @@ export function ProjectDetail() {
                   variant="ghost"
                   size="lg"
                   external
-                  leftIcon={<Github className="w-5 h-5" />}
+                  leftIcon={<GitHubIcon className="w-5 h-5" />}
                 >
                   Code source
                 </Button>
@@ -608,7 +608,7 @@ export function ProjectDetail() {
                     size="lg"
                     fullWidth
                     external
-                    leftIcon={<Github className="w-5 h-5" />}
+                    leftIcon={<GitHubIcon className="w-5 h-5" />}
                   >
                     Voir le code sur GitHub
                   </Button>

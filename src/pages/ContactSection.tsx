@@ -9,7 +9,7 @@ import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import { Textarea } from "../components/ui/Input";
 import { profile } from "../data/profile";
-import { Mail, Github, Linkedin, Twitter, Send, CheckCircleIcon, AlertCircleIcon, Loader2, ShieldIcon, SparklesIcon } from "../components/ui/BrandIcons";
+import { Mail, GitHubIcon, LinkedInIcon, TwitterIcon, Send, CheckCircleIcon, AlertCircleIcon, Loader2, ShieldIcon, SparklesIcon } from "../components/ui/BrandIcons";
 import { formatDateRange } from "../lib/utils";
 
 /**
@@ -518,12 +518,12 @@ export function ContactSection() {
                 desc: "Généralement sous 24h en jours ouvrés",
               },
               {
-                icon: Github,
+                icon: GitHubIcon,
                 title: "Types de projets",
                 desc: "Full-stack, backend, frontend, consulting, audit",
               },
               {
-                icon: Linkedin,
+                icon: LinkedInIcon,
                 title: "Disponibilité",
                 desc: "Temps plein, freelance, CDI, missions courtes",
               },
